@@ -1,4 +1,9 @@
+"use client";
+
+import SidebarItem from "@/components/layout/SidebarItem";
 import Image from "next/image";
+import { LayoutGrid, GraduationCap, User, LogOut } from "lucide-react";
+
 
 export default function MainLayout({
   children,
@@ -37,38 +42,21 @@ export default function MainLayout({
 
       {/* 3. MENU / ASIDE  */}
       <aside className="bg-fff rounded-3xl p-8 overflow-y-auto">
+
         <p className="text-[12px] font-bold text-aaa uppercase tracking-widest mb-6">Menu</p>
         <ul className="space-y-4 mb-10">
-          <li className="flex items-center gap-4 text-p2 font-bold cursor-pointer group">
-            <div className="w-10 h-10 rounded-full bg-p2/10 flex items-center justify-center italic">
-               {/* icon */}
-            </div>
-            <span className="figma-b2">Dashboard</span>
-          </li>
-          <li className="flex items-center gap-4 text-aaa hover:text-p1 transition-colors cursor-pointer group">
-            <div className="w-10 h-10 rounded-full bg-bg flex items-center justify-center group-hover:bg-eee italic">
-               {/* icon */}
-            </div>
-            <span className="figma-b2">Courses</span>
-          </li>
-          <li className="flex items-center gap-4 text-aaa hover:text-p1 transition-colors cursor-pointer group">
-            <div className="w-10 h-10 rounded-full bg-bg flex items-center justify-center group-hover:bg-eee italic">
-               {/* icon */}
-            </div>
-            <span className="figma-b2">My Courses</span>
-          </li>
+          <SidebarItem href="/dashboard" label="Dashboard" icon={LayoutGrid} />
+          <SidebarItem href="/courses" label="Courses" icon={GraduationCap} />
+          <SidebarItem href="/my-courses" label="My Courses" icon={GraduationCap} />
+
         </ul>
 
         <p className="text-[12px] font-bold text-aaa uppercase tracking-widest mb-6">General</p>
         <ul className="space-y-4">
-          <li className="flex items-center gap-4 text-aaa hover:text-p1 cursor-pointer group">
-             <div className="w-10 h-10 rounded-full bg-bg flex items-center justify-center group-hover:bg-eee"></div>
-             <span className="figma-b2">Profile</span>
-          </li>
-          <li className="flex items-center gap-4 text-p2 cursor-pointer group">
-             <div className="w-10 h-10 rounded-full bg-p2/10 flex items-center justify-center"></div>
-             <span className="figma-b2">Log Out</span>
-          </li>
+          <SidebarItem href="/profile" label="Profile" icon={User} />
+          {/* send in 'isActive' to set Log Out to orange */}
+          <SidebarItem href="/logout" label="Log Out" icon={LogOut} isActive />
+         
         </ul>
       </aside>
 
