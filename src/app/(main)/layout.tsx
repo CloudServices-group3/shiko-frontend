@@ -2,7 +2,7 @@
 
 import SidebarItem from "@/components/layout/SidebarItem";
 import Image from "next/image";
-import { LayoutGrid, GraduationCap, User, LogOut } from "lucide-react";
+import { LayoutGrid, Video, GraduationCap, User, LogOut } from "lucide-react";
 
 
 export default function MainLayout({
@@ -48,6 +48,8 @@ export default function MainLayout({
           <SidebarItem href="/dashboard" label="Dashboard" icon={LayoutGrid} />
           <SidebarItem href="/courses" label="Courses" icon={GraduationCap} />
           <SidebarItem href="/my-courses" label="My Courses" icon={GraduationCap} />
+          <SidebarItem href="/live-chat" label="Live Chat" icon={Video} />
+
 
         </ul>
 
