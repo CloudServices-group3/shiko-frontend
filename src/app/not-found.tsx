@@ -1,12 +1,33 @@
+import Image from "next/image";
+import Link from "next/link";
+
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-p1 p-8 text-fff">
-      <section className="text-center">
-        <h1 className="text-display font-medium">404</h1>
-        <p className="mt-6 text-title font-semibold text-fff/40">
+    <main>
+      <div>
+        <Image
+        src="/images/404/404-error.svg"
+        alt="404 Error Image"
+        width={530}
+        height={430}
+         />
+
+         <h1>
           Page Not Found!
-        </p>
-      </section>
+         </h1>
+
+         <p>
+          Sorry, the page you are looking for doesn't exist or has been removed.
+          <br />
+          Keep exploring our site.
+         </p>
+         <Link href="#">
+         Back to Dashboard
+         <span>
+          ↗
+         </span>
+         </Link>
+      </div>
     </main>
   );
 }
