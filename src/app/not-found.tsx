@@ -23,7 +23,7 @@ export default function NotFound() {
           Keep exploring our site.
          </p>
 
-         <Link href="#" className="mt-10 inline-flex items-center gap-2 rounded-xl bg-p2 px-8 py-4 font-semibold text-fff transition hover:opacity-90">
+         <Link href="/dashboard" className="mt-10 inline-flex items-center gap-2 rounded-xl bg-p2 px-8 py-4 font-semibold text-fff transition hover:opacity-90">
          Back to Dashboard
          <span className="text-lg">
           ↗
