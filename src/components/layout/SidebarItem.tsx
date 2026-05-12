@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LucideIcon } from "lucide-react";
@@ -33,8 +31,10 @@ export default function SidebarItem({
     <li>
       <Link 
         href={href} 
-        className={`flex items-center gap-4 p-2 rounded-2xl transition-all group ${
-          isSelected ? "bg-p2/5" : "hover:bg-bg"
+        className={`flex items-center gap-4 p-1.5 rounded-full transition-all group ${
+          isSelected 
+          ? "bg-linear-to-r from-p2/10 to-transparent"
+          : "hover:bg-bg"
         }`}
       >
         {/* Icon: orange bg if isSelected is true */}
@@ -47,7 +47,7 @@ export default function SidebarItem({
         </div>
 
         {/* text orange if isSelected is true */}
-        <span className={`figma-b2 font-semibold transition-colors ${
+        <span className={`figma-p1 transition-colors pr-8 ${
           isSelected ? "text-p2" : "text-p1 group-hover:text-000"
         }`}>
           {label}

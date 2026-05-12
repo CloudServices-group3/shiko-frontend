@@ -18,8 +18,8 @@ export default function MainLayout({
         <Image
           src="/images/Shiko-logo.svg" 
           alt="Shiko Logo"
-          width={130} 
-          height={40}
+          width={143} 
+          height={35}
           priority
         />
       </div>
@@ -28,33 +28,31 @@ export default function MainLayout({
       <header className="bg-fff rounded-3xl px-8 flex items-center justify-end">
         <div className="flex items-center gap-4">
           
+           {/* Placeholder profile pic */}
           <div className="w-12 h-12 rounded-full bg-eee overflow-hidden border-2 border-fff shadow-sm">
             
-             {/* Profile pic here */}
-
           </div>
           <div className="text-left">
-            <p className="figma-b3 font-bold text-p1">Profile name</p>
-            <p className="text-[11px] text-aaa">Profile email</p>
+            <p className="text-b1 font-bold">Profile name</p>
+            <p className="figma-b2 text-aaa">Profile@email.com</p>
           </div>
         </div>
       </header>
 
       {/* 3. MENU / ASIDE  */}
-      <aside className="bg-fff rounded-3xl p-8 overflow-y-auto">
+      <aside className="bg-fff rounded-3xl p-7 h-fit">
 
-        <p className="text-[12px] font-bold text-aaa uppercase tracking-widest mb-6">Menu</p>
-        <ul className="space-y-4 mb-10">
+        <p className="figma-b2 font-bold text-aaa mb-6">MENU</p>
+        <ul className="space-y-2 mb-10">
           <SidebarItem href="/dashboard" label="Dashboard" icon={LayoutGrid} />
           <SidebarItem href="/courses" label="Courses" icon={GraduationCap} />
           <SidebarItem href="/my-courses" label="My Courses" icon={GraduationCap} />
           <SidebarItem href="/live-chat" label="Live Chat" icon={Video} />
 
-
         </ul>
 
-        <p className="text-[12px] font-bold text-aaa uppercase tracking-widest mb-6">General</p>
-        <ul className="space-y-4">
+        <p className="figma-b2 font-bold text-aaa mb-6">GENERAL</p>
+        <ul className="space-y-2">
           <SidebarItem href="/profile" label="Profile" icon={User} />
           {/* send in 'isActive' to set Log Out to orange */}
           <SidebarItem href="/logout" label="Log Out" icon={LogOut} isActive />
