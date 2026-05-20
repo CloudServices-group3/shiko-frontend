@@ -1,4 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+type PopularCourse = {
+    id: string;
+    courseId: string;
+    title: string;
+    description: string;
+    iconUrl?: string;
+    clickCount: number;
+    lastClickedAt: string;
+}
 
 const popularCourses = [
   {
