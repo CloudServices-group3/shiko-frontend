@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const popularCourses = [
   {
     id: 1,
@@ -45,7 +47,12 @@ export default function PopularThisWeek() {
             </div>
 
             <button className="flex h-10 w-10 items-center justify-center rounded-full bg-p1 text-fff transition hover:bg-p2">
-              ↗
+                <Image 
+                src="/icons/popular-this-week/arrow-right.svg"
+                alt="Arrow Right"
+                width={16}
+                height={16}
+                />
             </button>
           </article>
         ))}
