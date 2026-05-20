@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CourseGrid from "@/components/courses/CourseGrid";
+import PopularThisWeek from "@/components/courses/PopularThisWeek";
 
 type Course = {
   id: number;
@@ -34,6 +35,9 @@ export default function CoursesPage() {
         onChange={(e) => setSearch(e.target.value)}
         className="w-full border rounded-lg px-4 py-2 mb-6"
       />
+
+      <PopularThisWeek />
+      
       <h2 className="text-xl font-semibold mb-6">All Courses</h2>
       <CourseGrid courses={filtered} />
     </div>
