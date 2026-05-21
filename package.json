@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@azure/communication-chat": "^1.6.0",
+    "@azure/communication-common": "^2.4.0",
     "@headlessui/react": "^2.2.10",
     "lucide-react": "^1.14.0",
     "next": "16.2.6",
