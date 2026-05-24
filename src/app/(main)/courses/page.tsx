@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CourseGrid from "@/components/courses/CourseGrid";
-import PopularThisWeek from "@/components/courses/PopularThisWeek";
+import PopularThisWeek from "@/components/courses/popular-this-week/PopularThisWeek";
 
 type Course = {
   id: number;

@@ -20,6 +20,7 @@ export default function CourseGrid({ courses }: CourseGridProps) {
       {courses.map((course) => (
         <CourseCard
           key={course.id}
+          id={course.id}
           title={course.title}
           imageUrl={course.imageUrl}
           lessonCount={course.lessonCount}

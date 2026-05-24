@@ -1,13 +1,28 @@
 import Image from "next/image";
 
 type CourseCardProps = {
+  id: number;
   title: string;
   imageUrl: string;
   lessonCount: number;
   duration: string;
 };
 
-export default function CourseCard({ title, imageUrl, lessonCount, duration }: CourseCardProps) {
+export default function CourseCard({ id, title, imageUrl, lessonCount, duration }: CourseCardProps) {
+    async function handleViewDetailsClick() {
+    await fetch("http://localhost:5287/api/popular-courses/click", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseId: id.toString(),
+        title,
+        description: `${lessonCount} Lesson • ${duration}`,
+        iconUrl: "/icons/popular-this-week/default.svg",
+      }),
+    });
+  }
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm">
       <div className="relative w-full h-48">
@@ -25,7 +40,7 @@ export default function CourseCard({ title, imageUrl, lessonCount, duration }: C
             <span>{lessonCount} Lesson</span>
             <span>{duration}</span>
           </div>
-          <button className="bg-orange-500 text-white text-sm px-4 py-1.5 rounded-lg">
+          <button onClick={handleViewDetailsClick} className="bg-orange-500 text-white text-sm px-4 py-1.5 rounded-lg">
             View Details
           </button>
         </div>
