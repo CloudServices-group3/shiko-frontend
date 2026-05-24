@@ -1,7 +1,4 @@
 
-/* Change this page later, maybe redirect to sign-in/dashboard,
- depending on if you are logged in or not. Or create a "Homepage" */
-
 export default function Home() {
   return (
     <main className="flex min-h-screen items-center justify-center p-8">

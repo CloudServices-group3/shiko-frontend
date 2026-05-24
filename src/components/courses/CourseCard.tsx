@@ -1,13 +1,15 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type CourseCardProps = {
+  id: string;
   title: string;
   imageUrl: string;
   lessonCount: number;
   duration: string;
 };
 
-export default function CourseCard({ title, imageUrl, lessonCount, duration }: CourseCardProps) {
+export default function CourseCard({ id, title, imageUrl, lessonCount, duration }: CourseCardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm">
       <div className="relative w-full h-48">
@@ -25,9 +27,11 @@ export default function CourseCard({ title, imageUrl, lessonCount, duration }: C
             <span>{lessonCount} Lesson</span>
             <span>{duration}</span>
           </div>
-          <button className="bg-orange-500 text-white text-sm px-4 py-1.5 rounded-lg">
-            View Details
-          </button>
+          <Link href={`/courses/${id}`}>
+            <button className="bg-orange-500 text-white text-sm px-4 py-1.5 rounded-lg">
+              View Details
+            </button>
+          </Link>
         </div>
       </div>
     </div>
