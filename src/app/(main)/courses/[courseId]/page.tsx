@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -71,3 +72,5 @@ export default function CourseId() {
     </div>
   );
 }
+=======
+>>>>>>> 741371b03dd3dd280cfb6bd3c493f056ebf0a3f8
