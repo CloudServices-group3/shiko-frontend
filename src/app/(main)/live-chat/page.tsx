@@ -19,11 +19,11 @@ interface Message {
 }
 
 //Decode jwt token
-// function parseJwt(token: string) {
-//   const base64 = token.split(".")[1];
-//   const decoded = JSON.parse(atob(base64));
-//   return decoded;
-// }
+function parseJwt(token: string) {
+  const base64 = token.split(".")[1];
+  const decoded = JSON.parse(atob(base64));
+  return decoded;
+}
 
 
 export default function LiveChat() {
@@ -34,11 +34,8 @@ export default function LiveChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // --- test values ---
-  const [userToken, setUserToken] = useState<string | null>(
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMWIzYzNkNC1lNWY2LTdhOGItOWMwZC0xZTJmM2E0YjVjNmQiLCJlbWFpbCI6Im5ldHRlQHRlc3QuY29tIiwibmFtZSI6Ik5ldHRlIiwiaXNzIjoiYXV0aC1hcGkiLCJhdWQiOiJtaWNyb3NlcnZpY2UiLCJleHAiOjk5OTk5OTk5OTl9.X-yDIozSqqYGjuAejl9qNFCn0U-7k5eo6oBgnJx6TQ4"
-  );
-
-  const [username, setUsername] = useState<string | null>("Nette");
+ const [userToken, setUserToken] = useState<string | null>(null);
+ const [username, setUsername] = useState<string | null>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
@@ -49,19 +46,31 @@ export default function LiveChat() {
   const courseId = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6e";
 
   // =========================================================
-  // GET FROM LOCALSTORAGE
+  // GET FROM SESSION STORAGE
   // =========================================================
-  /*
+  
   useEffect(() => {
-    const jwt = localStorage.getItem("accessToken"); 
-    if (!jwt) return;
+   if (typeof window !== "undefined") {
+    // GET ACCESSTOKEN
+    const jwt = sessionStorage.getItem("accessToken"); 
 
-    const decoded = parseJwt(jwt);
-    setUserToken(jwt);
-    setUserId(decoded.sub);       // userId från sub-claim
-    setUsername(decoded.name || decoded.email); // namn från JWT
-  }, []);
-  */
+    if (jwt) {
+      try {
+        const decoded = parseJwt(jwt);
+        
+        setUserToken(jwt);
+        // set username from claims
+        setUsername(decoded.name || decoded.email || "Användare"); 
+        
+        console.log("Token and user was collected!", decoded);
+      } catch (err) {
+        console.error("could not read", err);
+      }
+    } else {
+      console.log("Nothing in session storage");
+    }
+  }
+}, []);
   // =========================================================
 
 
@@ -113,6 +122,28 @@ export default function LiveChat() {
         const threadClient = chatClient.getChatThreadClient(data.room.azureThreadId);
         
         setChatThreadClient(threadClient);
+
+        // === STARTA REALTIDSLYSSTNING HÄR ===
+
+await chatClient.startRealtimeNotifications();
+chatClient.on("chatMessageReceived", (e) => {
+  // Kontrollera att meddelandet tillhör just den här tråden
+  if (e.threadId === data.room.azureThreadId) {
+    // Om meddelandet INTE är från dig själv, lägg till det i listan
+    if ((e.sender as any).communicationUserId !== data.tokenData.acsUserId) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: e.senderDisplayName || "Klasskamrat",
+          text: e.message,
+          isMe: false,
+          timestamp: new Date(e.createdOn).toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
+    }
+  }
+});
+// ====================================
 
         // add welcome-message 
         setMessages([
