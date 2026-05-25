@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* FIGMAMVP colors */
+  --shiko-bg: #F7F8F9;  /* Figma: BG */
+  --shiko-p1: #2C3545;  /* Figma: P1 */
+  --shiko-p2: #ED5735;  /* Figma: P2 */
+  --shiko-fff: #FFFFFF; /* Figma: FFF */
+  --shiko-000: #000000; /* Figma: 000 */
+  --shiko-aaa: #AAAAAA; /* Figma: AAA */
+  --shiko-eee: #EEEEEE; /* Figma: EEE */
+  --shiko-ddd: #DDDDDD; /* Figma: DDD */
+
+  --font-body: var(--font-archivo), sans-serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--shiko-bg);
+  --color-p1: var(--shiko-p1);
+  --color-p2: var(--shiko-p2);
+  --color-fff: var(--shiko-fff);
+  --color-000: var(--shiko-000);
+  --color-aaa: var(--shiko-aaa);
+  --color-eee: var(--shiko-eee);
+  --color-ddd: var(--shiko-ddd);
+
+  --font-shiko: var(--font-body);
+
+  /* Typography */
+  --text-display: 70px;
+  --text-display--line-height: 76px;
+
+  --text-h1: 30px;
+  --text-h1--line-height: 33px;
+
+  --text-h2: 24px;
+  --text-h2--line-height: 26px;
+
+  --text-title: 22px;
+  --text-title--line-height: 24px;
+
+  --text-b1: 20px;
+  --text-b1--line-height: 22px;
+
+  --text-b2: 16px;
+  --text-b2--line-height: 17px;
+
+  --text-b3: 14px;
+  --text-b3--line-height: 15px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+    
+  html {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-p1 font-shiko antialiased;
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  
+  /*
+    Font weight translation from Figma to Tailwind:
+
+    Figma: Regular  = CSS font-weight: 400 = Tailwind: font-normal
+    Figma: Medium   = CSS font-weight: 500 = Tailwind: font-medium
+    Figma: SemiBold = CSS font-weight: 600 = Tailwind: font-semibold
+    Figma: Bold     = CSS font-weight: 700 = Tailwind: font-bold
+
+    Use the .figma-* helper classes only when the Figma element uses
+    the matching text style name, for example H1, H2, B2 or B3.
+  */
+
+  .figma-h1      { @apply text-h1 font-semibold; }
+  .figma-h2      { @apply text-h2 font-semibold; }
+  .figma-title   { @apply text-title font-semibold; }
+  .figma-b1      { @apply text-b1 font-medium; }
+  .figma-b2      { @apply text-b2 font-medium; }
+  .figma-b3      { @apply text-b3 font-medium; }
 }
