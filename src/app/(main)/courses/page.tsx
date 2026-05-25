@@ -1,10 +1,9 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import CourseGrid from "@/components/courses/CourseGrid";
 
 type Course = {
-  id: number;
+  id: string;
   title: string;
   imageUrl: string;
   lessonCount: number;
@@ -16,7 +15,7 @@ export default function CoursesPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5245/api/courses")
+    fetch("https://shiko-course-api-dana-awdagkgff6gfgtbp.swedencentral-01.azurewebsites.net/api/courses")
       .then((res) => res.json())
       .then((data) => setCourses(data));
   }, []);
