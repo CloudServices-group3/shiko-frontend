@@ -31,6 +31,10 @@ export default function SignIn() {
         case "NotFound":
           router.push("/almost-there");
         break;
+
+        case "PendingVerification":
+          router.push("/verification-needed");
+        break;
         
         case "ReadyForLogin":
           router.push("/sign-in-password");
@@ -40,9 +44,16 @@ export default function SignIn() {
           setError("An unexpected error occurred. Please try again.");
         break;
       }
-    } catch (err) {
+    } catch (err) 
+    {
+      console.error(err);
+
+      if(err instanceof Error) 
+        setError(err.message);
+      else
       console.error(err);
       setError("Something went wrong.");
+
     } finally {
       setLoading(false);
     }
