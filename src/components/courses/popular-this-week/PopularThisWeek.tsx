@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -20,7 +21,7 @@ export default function PopularThisWeek() {
   useEffect(() => {
     async function fetchPopularCourses() {
       try {
-        const response = await fetch("http://localhost:5287/api/popular-courses");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL}/api/popular-courses`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch popular courses");
@@ -52,9 +53,9 @@ export default function PopularThisWeek() {
               className="flex items-center justify-between rounded-2xl border border-eee bg-bg p-4 transition hover:shadow-md"
             >
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-fff">
+                <div className="flex h-14 w-14 items-center justify-center rounded-4xl bg-fff">
                   <Image
-                    src={course.iconUrl ?? "/icons/popular-this-week/default.svg"}
+                    src={"/icons/popular-this-week/course.svg"}
                     alt={course.title}
                     width={28}
                     height={28}
@@ -67,14 +68,17 @@ export default function PopularThisWeek() {
                 </div>
               </div>
 
-              <button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-p1 text-fff transition hover:bg-p2">
+              <Link
+                href={`/courses/${course.courseId}`}
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-p1 text-fff transition hover:bg-p2"
+              >
                 <Image
                   src="/icons/popular-this-week/arrow-right.svg"
                   alt="Arrow Right"
                   width={16}
                   height={16}
                 />
-              </button>
+              </Link>
             </article>
           ))}
         </div>

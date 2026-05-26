@@ -11,7 +11,7 @@ type CourseCardProps = {
 
 export default function CourseCard({ id, title, imageUrl, lessonCount, duration }: CourseCardProps) {
   async function handleViewDetailsClick() {
-    await fetch("http://localhost:5287/api/popular-courses/click", {
+    await fetch(`${process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL}/api/popular-courses/click`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,7 +20,7 @@ export default function CourseCard({ id, title, imageUrl, lessonCount, duration 
         courseId: id,
         title,
         description: `${lessonCount} Lesson • ${duration}`,
-        iconUrl: "/icons/popular-this-week/default.svg",
+        iconUrl: "/icons/popular-this-week/course.svg",
       }),
     });
   }
