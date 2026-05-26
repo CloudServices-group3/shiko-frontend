@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import LessonExercisePanel from "@/components/courses/lesson-exercise-panel";
 
 interface KeyPoint {
   id: string;
@@ -20,6 +22,7 @@ async function getCourse(courseId: string): Promise<CourseDetail> {
     `https://shiko-course-details-api-dana-facvhgfmeqfxhmcf.swedencentral-01.azurewebsites.net/api/coursedetails/${courseId}`,
     { cache: "force-cache" }
   );
+
   return res.json();
 }
 
@@ -34,27 +37,47 @@ export default async function CourseLayout({
   const course = await getCourse(courseId);
 
   return (
-    <div className="max-w-2xl mx-auto pb-16">
-      <img
-        src={course.imageUrl}
-        alt={course.title}
-        className="w-full h-72 object-cover"
-      />
-      <div className="px-5 pt-5">
-        <h1 className="text-2xl font-bold text-gray-900 mt-3">{course.title}</h1>
-        <div className="flex items-center gap-6 mt-3 text-sm text-gray-600">
-          <span>{course.lessonCount} Lessons</span>
-          <span>{course.duration}</span>
-        </div>
-        <div className="flex gap-3 mt-5">
-          <button className="px-5 py-2 rounded bg-gray-900 text-white text-sm font-medium">
-            Overview
-          </button>
-          <button className="px-5 py-2 rounded bg-orange-500 text-white text-sm font-medium">
-            review
-          </button>
-        </div>
-        {children}
+    <div className="pb-16">
+      <div className="grid grid-cols-[1fr_370px] gap-7.5">
+        <section className="rounded-[25px] bg-fff p-7.5">
+        <Image
+          src={course.imageUrl}
+          alt={course.title}
+          width={900}
+          height={360}
+          priority
+          className="h-90 w-full rounded-[20px] object-cover"
+        />
+
+          <div className="mt-7.5">
+            <h1 className="figma-h1 text-p1">{course.title}</h1>
+
+            <div className="figma-b2 mt-5 flex items-center gap-7.5 text-aaa">
+              <span>{course.lessonCount} Lessons</span>
+              <span>{course.duration}</span>
+            </div>
+
+            <nav className="mt-7.5 flex gap-3.75">
+              <Link
+                href={`/courses/${courseId}`}
+                className="figma-b2 rounded-[9px] bg-p1 px-6 py-4 text-fff"
+              >
+                Overview
+              </Link>
+
+              <Link
+                href={`/courses/${courseId}/reviews`}
+                className="figma-b2 rounded-[9px] px-6 py-4 text-aaa"
+              >
+                Reviews
+              </Link>
+            </nav>
+
+            {children}
+          </div>
+        </section>
+
+        <LessonExercisePanel courseId={courseId} />
       </div>
     </div>
   );
