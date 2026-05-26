@@ -18,8 +18,13 @@ export type LoginResponse = {
     
 };
 
+export type RegisterResponse = {
+    message: string;
+};
+
+
 export type CheckEmailResult = {
-    status: "NotFound" | "ReadyForLogin";
+    status: "NotFound" | "ReadyForLogin" | "PendingVerification";
 }
 
 export function saveAuth(result: LoginResponse) {
@@ -38,10 +43,18 @@ export const authService = {
             body: JSON.stringify({ email }),
         });
 
-        if(!res.ok) throw new Error("check email failed");
+        if (!res.ok) {
+        const errorText = await res.text();
 
-        const data: CheckEmailResult = await res.json();
-        return data;
+        console.log("Status:", res.status);
+        console.log("Response:", errorText);
+
+        throw new Error(
+            `Check email failed (${res.status}): ${errorText}`
+        );
+    }
+
+    return await res.json();
     },
 
     async login(email: string, password: string): Promise<LoginResponse> {
@@ -53,13 +66,15 @@ export const authService = {
             body: JSON.stringify({ email, password }),
         });
 
-        if(!res.ok) throw new Error("login failed");
-
+        if(!res.ok) 
+        {
+            const error = await res.text(); throw new Error(error);
+        }
         const data: LoginResponse = await res.json();
         return data;
     },
 
-    async register(email: string, password: string): Promise<LoginResponse> {
+    async register(email: string, password: string): Promise<RegisterResponse> {
         const res = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: {
@@ -70,7 +85,7 @@ export const authService = {
 
         if (!res.ok) throw new Error("register failed");
 
-        const data: LoginResponse = await res.json();
+        const data: RegisterResponse = await res.json();
         return data;
     }
 };

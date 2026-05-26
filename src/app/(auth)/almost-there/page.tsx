@@ -2,7 +2,7 @@
 
 import { useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
-import { authService, saveAuth } from "@/services/auth-service";
+import { authService } from "@/services/auth-service";
 
 export default function AlmostThere() {
   const router = useRouter();
@@ -35,16 +35,10 @@ export default function AlmostThere() {
       setLoading(true);
       setError("");
 
-      //Register the user.
-      const result = await authService.register(email, password);
-
-      sessionStorage.removeItem("email");
-
-      //Save JWT token
-      saveAuth(result);
+      await authService.register(email, password);
 
       // Redirect the user to dashboard.
-      router.push("/dashboard");
+      router.push("/verification-needed");
     } catch (err) {
       console.error(err);
       setError("Something went wrong.");
