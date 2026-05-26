@@ -1,9 +1,8 @@
 "use client";
-
 import CourseCard from "./CourseCard";
 
 type Course = {
-  id: number;
+  id: string;  
   title: string;
   imageUrl: string;
   lessonCount: number;
