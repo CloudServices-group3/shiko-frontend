@@ -105,7 +105,7 @@ export default function LiveChat() {
           if ((e.sender as any).communicationUserId === data.tokenData.acsUserId) return;
 
           setMessages((prev) => [...prev, {
-            sender: e.senderDisplayName || "Class mate",
+            sender: e.senderDisplayName || "Classmate",
             text: e.message,
             isMe: false,
             timestamp: new Date(e.createdOn).toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }),
