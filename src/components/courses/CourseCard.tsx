@@ -10,6 +10,20 @@ type CourseCardProps = {
 };
 
 export default function CourseCard({ id, title, imageUrl, lessonCount, duration }: CourseCardProps) {
+  async function handleViewDetailsClick() {
+    await fetch(`${process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL}/api/popular-courses/click`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseId: id,
+        title,
+        description: `${lessonCount} Lesson • ${duration}`,
+        iconUrl: "/icons/popular-this-week/course.svg",
+      }),
+    });
+  }
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm">
       <div className="relative w-full h-48">
@@ -27,10 +41,12 @@ export default function CourseCard({ id, title, imageUrl, lessonCount, duration 
             <span>{lessonCount} Lesson</span>
             <span>{duration}</span>
           </div>
-          <Link href={`/courses/${id}`}>
-            <button className="bg-orange-500 text-white text-sm px-4 py-1.5 rounded-lg">
-              View Details
-            </button>
+          <Link
+            href={`/courses/${id}`}
+            onClick={handleViewDetailsClick}
+            className="bg-orange-500 text-white text-sm px-4 py-1.5 rounded-lg"
+          >
+            View Details
           </Link>
         </div>
       </div>
