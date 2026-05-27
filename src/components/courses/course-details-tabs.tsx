@@ -11,9 +11,11 @@ export default function CourseDetailsTabs({ courseId }: CourseDetailsTabsProps) 
   const pathname = usePathname();
 
   const overviewHref = `/courses/${courseId}`;
+  const faqHref = `/courses/${courseId}/faqs`;
   const reviewsHref = `/courses/${courseId}/reviews`;
 
   const isOverviewActive = pathname === overviewHref;
+  const isFaqActive = pathname === faqHref;
   const isReviewsActive = pathname === reviewsHref;
 
   return (
@@ -28,6 +30,17 @@ export default function CourseDetailsTabs({ courseId }: CourseDetailsTabsProps) 
       >
         Overview
       </Link>
+
+      <Link
+        href={faqHref}
+        className={
+          isFaqActive
+            ? "figma-b2 rounded-[9px] bg-p1 px-6 py-4 text-fff"
+            : "figma-b2 rounded-[9px] bg-bg px-6 py-4 text-aaa"
+        }
+      >
+        FAQs
+    </Link>
 
       <Link
         href={reviewsHref}
