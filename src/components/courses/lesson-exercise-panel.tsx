@@ -11,12 +11,7 @@ type LessonExercisePanelProps = {
 };
 
 function formatDuration(minutes: number) {
-  const wholeMinutes = Math.floor(minutes);
-  const seconds = Math.round((minutes - wholeMinutes) * 60);
-
-  return `${wholeMinutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
+  return `${minutes.toString().padStart(2, "0")}:00`;
 }
 
 export default function LessonExercisePanel({ courseId }: LessonExercisePanelProps) {
@@ -83,9 +78,8 @@ export default function LessonExercisePanel({ courseId }: LessonExercisePanelPro
 
   return (
     <aside className="rounded-[25px] bg-fff p-7.5">
-      <div className="mb-5 flex items-center justify-between">
+      <div className="mb-5">
         <h2 className="figma-title text-p1">Lesson Exercise</h2>
-
       </div>
 
       {error && (
@@ -94,40 +88,40 @@ export default function LessonExercisePanel({ courseId }: LessonExercisePanelPro
         </p>
       )}
 
-      <div className="flex flex-col gap-3">
+      <div className="flex max-h-170 flex-col gap-3 overflow-y-auto pr-1">
         {data.lessons.map((lesson) => {
-        const isCompleting = completingLessonId === lesson.id;
+          const isCompleting = completingLessonId === lesson.id;
 
-        return (
+          return (
             <button
-            key={lesson.id}
-            type="button"
-            disabled={lesson.isCompleted || isCompleting}
-            onClick={() => handleCompleteLesson(lesson.id)}
-            className="flex w-full items-center justify-between rounded-[15px] bg-bg px-5 py-4 text-left disabled:cursor-default"
+              key={lesson.id}
+              type="button"
+              disabled={lesson.isCompleted || isCompleting}
+              onClick={() => handleCompleteLesson(lesson.id)}
+              className="flex w-full items-center justify-between rounded-[15px] bg-bg px-5 py-4 text-left disabled:cursor-default"
             >
-            <span className="min-w-0 flex-1">
+              <span className="min-w-0 flex-1">
                 <span className="figma-b2 block truncate text-p1">
-                {lesson.title}
+                  {lesson.title}
                 </span>
                 <span className="figma-b3 mt-1 block text-aaa">
-                {formatDuration(lesson.durationMinutes)}
+                  {formatDuration(lesson.durationMinutes)}
                 </span>
-            </span>
+              </span>
 
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fff text-aaa">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fff text-aaa">
                 {lesson.isCompleted ? (
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-p1 text-[10px] font-semibold text-fff">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-p1 text-[10px] font-semibold text-fff">
                     ✓
-                </span>
+                  </span>
                 ) : isCompleting ? (
-                <span className="figma-b3 text-aaa">...</span>
+                  <span className="figma-b3 text-aaa">...</span>
                 ) : (
-                <span className="text-xs text-aaa">▶</span>
+                  <span className="text-xs text-aaa">▶</span>
                 )}
-            </span>
+              </span>
             </button>
-        );
+          );
         })}
       </div>
     </aside>
