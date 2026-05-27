@@ -13,9 +13,7 @@ type FaqAccordionProps = {
 };
 
 export default function FaqAccordion({ faqs }: FaqAccordionProps) {
-  const [openFaqId, setOpenFaqId] = useState<string | null>(
-    faqs[0]?.id ?? null
-  );
+const [openFaqId, setOpenFaqId] = useState<string | null>(null);
 
   return (
     <div className="mt-5 space-y-4">
