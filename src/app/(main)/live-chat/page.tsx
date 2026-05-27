@@ -2,19 +2,20 @@
 
 import { useEffect, useState, useRef } from "react";
 import { AzureCommunicationTokenCredential } from "@azure/communication-common";
-import { ChatClient, ChatThreadClient } from "@azure/communication-chat";
+import { ChatClient, ChatThreadClient, ChatMessageReceivedEvent } from "@azure/communication-chat";
 import { Send } from "lucide-react";
-
 
 // CONSTANTS
 const CHAT_API_URL = "https://azure-chat-webapp-crf4ded2dzf0b5d0.swedencentral-01.azurewebsites.net";
-// using a coursID to keep a general chat only
-const COURSE_ID = "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c9e";
+const COURSE_ID = "a4b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c2e"; // keep course id for general chat
 
-// INTERFACES
+// INTERFACES 
 interface ChatRoomResponse {
-  room: { id: string; courseId: string; azureThreadId: string; created: string };
-  tokenData: { userId: string; acsUserId: string; token: string; expiresOn: string; endpoint: string };
+  azureThreadId: string;
+  endpoint: string;
+  acsUserId: string;
+  token: string;
+  expiresOn: string;
 }
 
 interface Message {
@@ -25,8 +26,6 @@ interface Message {
 }
 
 // HELPERS
-
-// Decode JWT token to get user info from claims
 function parseJwt(token: string) {
   const base64 = token.split(".")[1];
   return JSON.parse(atob(base64));
@@ -36,9 +35,7 @@ function getCurrentTime() {
   return new Date().toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" });
 }
 
-
 export default function LiveChat() {
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [userToken, setUserToken] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
@@ -48,7 +45,6 @@ export default function LiveChat() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
- 
   // EFFECT: Get token and username from session storage
   useEffect(() => {
     const jwt = sessionStorage.getItem("token");
@@ -57,7 +53,7 @@ export default function LiveChat() {
     try {
       const decoded = parseJwt(jwt);
       setUserToken(jwt);
-      setUsername(decoded.name || decoded.email || "Användare");
+      setUsername(decoded.email || "Class mate");
     } catch (err) {
       console.error("Could not parse token", err);
     }
@@ -68,20 +64,23 @@ export default function LiveChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  
   // EFFECT: Initialize Azure Chat when token is available
   useEffect(() => {
-    if (!userToken) return;
+    if (!userToken || !username) return;
+
+    let mounted = true;
 
     async function initAzureChat() {
       try {
         setLoading(true);
+        setError(null);
 
-        // Call backend to get or create chat room and ACS token
+        // Call backend to join global chat
         const response = await fetch(`${CHAT_API_URL}/api/chat/join/${COURSE_ID}`, {
           method: "POST",
           headers: {
             "Accept": "application/json",
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${userToken}`,
           },
         });
@@ -90,67 +89,118 @@ export default function LiveChat() {
 
         const data: ChatRoomResponse = await response.json();
 
-        // Initialize ACS chat client with token from backend
-        const tokenCredential = new AzureCommunicationTokenCredential(data.tokenData.token);
-        const chatClient = new ChatClient(data.tokenData.endpoint, tokenCredential);
-        const threadClient = chatClient.getChatThreadClient(data.room.azureThreadId);
+        console.log("ACS USER:", data.acsUserId);
+        console.log("TOKEN EXPIRES:", data.expiresOn);
+
+        // Initialize ACS chat client with flat object data
+        const tokenCredential = new AzureCommunicationTokenCredential(data.token);
+        const chatClient = new ChatClient(data.endpoint, tokenCredential);
+        const threadClient = chatClient.getChatThreadClient(data.azureThreadId);
+
+        // Verify thread access
+        await threadClient.getProperties();
+
+        if (!mounted) return;
 
         setChatThreadClient(threadClient);
 
-        // Start real time notifications and listen for incoming messages
-        await chatClient.startRealtimeNotifications();
-        chatClient.on("chatMessageReceived", (e) => {
-          // Only handle messages from this thread, and not from ourselves
-          if (e.threadId !== data.room.azureThreadId) return;
-          if ((e.sender as any).communicationUserId === data.tokenData.acsUserId) return;
+        // LOAD OLD MESSAGES
+        const history: Message[] = [];
 
-          setMessages((prev) => [...prev, {
-            sender: e.senderDisplayName || "Classmate",
-            text: e.message,
-            isMe: false,
-            timestamp: new Date(e.createdOn).toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }),
-          }]);
+        for await (const msg of threadClient.listMessages()) {
+          if (msg.type !== "text") continue;
+
+          history.push({
+            sender: msg.senderDisplayName || "Unknown",
+            text: msg.content?.message || "",
+            isMe: (msg.sender as any)?.communicationUserId === data.acsUserId,
+            timestamp: new Date(msg.createdOn!).toLocaleTimeString("sv-SE", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          });
+        }
+
+        // ACS returns newest first, flip it
+        history.reverse();
+        setMessages(history);
+
+        // Start real time notifications
+        await chatClient.startRealtimeNotifications();
+
+        chatClient.on("chatMessageReceived", (e: ChatMessageReceivedEvent) => {
+          if (e.threadId !== data.azureThreadId) return;
+          if ((e.sender as any)?.communicationUserId === data.acsUserId) return;
+
+          setMessages((prev) => [
+            ...prev,
+            {
+              sender: e.senderDisplayName || "Class mate",
+              text: e.message || "",
+              isMe: false,
+              timestamp: new Date(e.createdOn!).toLocaleTimeString("sv-SE", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            },
+          ]);
         });
 
-        // Add system message to confirm connection
-        setMessages([{
-          sender: "System",
-          text: "Connected to chat!",
-          isMe: false,
-          timestamp: getCurrentTime(),
-        }]);
+        // System message to confirm connection
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: "System",
+            text: "Connected to chat!",
+            isMe: false,
+            timestamp: getCurrentTime(),
+          },
+        ]);
 
       } catch (err: any) {
-        setError(err.message);
+        console.error(err);
+        if (mounted) {
+          setError(err?.message || "Could not connect to chat..");
+        }
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     }
 
     initAzureChat();
-  }, [userToken]);
 
-  // handle send-message
-  const handleSendMessage = async (e: React.SyntheticEvent) => {
+    return () => {
+      mounted = false;
+    };
+  }, [userToken, username]);
+
+  // Handle send-message
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!inputText.trim() || !chatThreadClient) return;
 
     try {
-      await chatThreadClient.sendMessage({ content: inputText });
+      await chatThreadClient.sendMessage({
+        content: inputText,
+      });
 
-      setMessages((prev) => [...prev, {
-        sender: username ?? "Du",
-        text: inputText,
-        isMe: true,
-        timestamp: getCurrentTime(),
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: username ?? "You:",
+          text: inputText,
+          isMe: true,
+          timestamp: getCurrentTime(),
+        },
+      ]);
 
       setInputText("");
     } catch (err) {
       console.error("Message could not be sent", err);
+      setError("Message could not be sent.");
     }
   };
-
 
   return (
      <section className="flex flex-col h-150 max-w-3xl mx-auto bg-gray-50 border border-gray-200 rounded-xl shadow-sm overflow-hidden mt-6">
@@ -174,7 +224,7 @@ export default function LiveChat() {
             <span className="text-xs text-gray-400 mb-1 px-2">{msg.sender}</span>
             <div className={`p-3 rounded-2xl shadow-sm border ${
               msg.isMe
-                ? "bg-blue-600 text-white rounded-tr-none border-blue-700"
+                ? "bg-p2 text-white rounded-tr-none"
                 : "bg-white text-gray-800 rounded-tl-none border-gray-100"
             }`}>
               {msg.text}
