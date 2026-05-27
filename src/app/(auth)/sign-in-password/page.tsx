@@ -71,7 +71,7 @@ export default function SignInPassword() {
 
         {/* Right side form */}
         <div className="w-full md:w-1/2 flex items-center p-10">
-          <div className="w-full max-w-md space-y-[104px] ml-[63px] mb-[240px]">
+          <div className="w-full max-w-md space-y-[40px] ml-[63px] mb-[240px]">
 
 
             {/* Title */}
