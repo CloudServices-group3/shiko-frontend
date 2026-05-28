@@ -7,12 +7,15 @@ import DetailedRatingBreakdown, {
 import WriteReviewForm, {
   type CourseReviewSubmitData,
 } from "@/components/courses/reviews/WriteReviewForm";
+import { courseRatingService } from "@/services/course-rating-service";
+import { courseReviewService } from "@/services/course-review-service";
 
 type CourseReviewsSectionProps = {
   courseId: string;
   averageRating: number;
   reviewCount: number;
   ratingBreakdown: readonly RatingBreakdownItem[];
+  onFeedbackSaved?: () => Promise<void> | void;
 };
 
 export default function CourseReviewsSection({
@@ -20,9 +23,26 @@ export default function CourseReviewsSection({
   averageRating,
   reviewCount,
   ratingBreakdown,
+  onFeedbackSaved,
 }: CourseReviewsSectionProps) {
   async function handleSubmit(data: CourseReviewSubmitData) {
-    console.log(data);
+    if (!data.rating) {
+      throw new Error("Rating is required.");
+    }
+
+    await courseRatingService.saveMyRating(courseId, data.rating);
+
+    if (data.reviewText.length > 0) {
+      const existingReview = await courseReviewService.getMyReview(courseId);
+
+      if (existingReview) {
+        await courseReviewService.updateMyReview(courseId, data.reviewText);
+      } else {
+        await courseReviewService.createReview(courseId, data.reviewText);
+      }
+    }
+
+    await onFeedbackSaved?.();
   }
 
   return (

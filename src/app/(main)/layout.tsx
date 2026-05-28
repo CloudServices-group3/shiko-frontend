@@ -38,7 +38,7 @@ export default function MainLayout({
   return (
     <div className="min-h-screen bg-bg">
       {/* General Grid layout */}
-      <div className="mx-auto grid h-screen w-full max-w-[1920px] bg-bg p-7.5 gap-7.5 
+      <div className="mx-auto grid h-screen w-full max-w-480 bg-bg p-7.5 gap-7.5 
                       grid-cols-[280px_1fr] grid-rows-[auto_1fr] font-shiko overflow-hidden">
         
         {/* LOGO  */}
