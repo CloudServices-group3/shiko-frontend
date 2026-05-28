@@ -17,7 +17,7 @@ export default function MainLayout({
 
     try {
       if (refreshToken) {
-        await fetch("https://shiko-auth-api.azurewebsites.net/api/auth/logout", {
+        await fetch("https://shiko-auth-api-2.azurewebsites.net/api/auth/logout", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
