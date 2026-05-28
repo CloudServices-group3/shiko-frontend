@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { archivo } from "./fonts"
 import "./globals.css";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Shiko LMS",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={archivo.variable}>
-      <body>{children}</body>
+      <body>
+        <Script src="https://accounts.google.com/gsi/client" async />
+        {children}
+        </body>
     </html>
   );
 }
