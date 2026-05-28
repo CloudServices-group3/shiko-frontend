@@ -1,3 +1,4 @@
+import { apiFetch } from "./api-client";
 const API_URL = "https://shiko-lesson-exercise-provider.azurewebsites.net/api";
 
 export type LessonExerciseItem = {
@@ -35,7 +36,7 @@ function getAuthHeaders() {
 
 export const lessonExerciseService = {
   async getMyLessonExercises(courseId: string): Promise<CourseLessonExercisesResponse> {
-    const res = await fetch(`${API_URL}/courses/${courseId}/lesson-exercises/me`, {
+    const res = await apiFetch(`${API_URL}/courses/${courseId}/lesson-exercises/me`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -51,7 +52,7 @@ export const lessonExerciseService = {
     courseId: string,
     lessonExerciseId: string
   ): Promise<CourseLessonExercisesResponse> {
-    const res = await fetch(
+    const res = await apiFetch(
       `${API_URL}/courses/${courseId}/lesson-exercises/${lessonExerciseId}/complete`,
       {
         method: "PUT",

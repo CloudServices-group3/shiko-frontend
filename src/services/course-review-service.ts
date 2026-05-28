@@ -1,3 +1,4 @@
+import { apiFetch } from "./api-client";
 const API_URL = "https://shiko-course-review-provider.azurewebsites.net/api";
 
 export type CourseReview = {
@@ -28,7 +29,7 @@ function getAuthHeaders() {
 
 export const courseReviewService = {
   async getCourseReviews(courseId: string): Promise<CourseReview[]> {
-    const res = await fetch(`${API_URL}/course-reviews/${courseId}`, {
+    const res = await apiFetch(`${API_URL}/course-reviews/${courseId}`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -41,7 +42,7 @@ export const courseReviewService = {
   },
 
   async getMyReview(courseId: string): Promise<CourseReview | null> {
-    const res = await fetch(`${API_URL}/course-reviews/${courseId}/me`, {
+    const res = await apiFetch(`${API_URL}/course-reviews/${courseId}/me`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -58,7 +59,7 @@ export const courseReviewService = {
   },
 
   async createReview(courseId: string, text: string): Promise<CourseReview> {
-    const res = await fetch(`${API_URL}/course-reviews/${courseId}`, {
+    const res = await apiFetch(`${API_URL}/course-reviews/${courseId}`, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify({ text }),
@@ -72,7 +73,7 @@ export const courseReviewService = {
   },
 
   async updateMyReview(courseId: string, text: string): Promise<CourseReview> {
-    const res = await fetch(`${API_URL}/course-reviews/${courseId}/me`, {
+    const res = await apiFetch(`${API_URL}/course-reviews/${courseId}/me`, {
       method: "PUT",
       headers: getAuthHeaders(),
       body: JSON.stringify({ text }),
@@ -86,7 +87,7 @@ export const courseReviewService = {
   },
 
   async deleteMyReview(courseId: string): Promise<void> {
-    const res = await fetch(`${API_URL}/course-reviews/${courseId}/me`, {
+    const res = await apiFetch(`${API_URL}/course-reviews/${courseId}/me`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });

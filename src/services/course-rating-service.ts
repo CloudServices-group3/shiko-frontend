@@ -1,3 +1,4 @@
+import { apiFetch } from "./api-client";
 const API_URL = "https://shiko-course-rating-provider.azurewebsites.net/api";
 
 export type CourseRatingDistributionItem = {
@@ -36,7 +37,7 @@ function getAuthHeaders() {
 
 export const courseRatingService = {
   async getSummary(courseId: string): Promise<CourseRatingSummary> {
-    const res = await fetch(`${API_URL}/course-ratings/${courseId}/summary`);
+    const res = await apiFetch(`${API_URL}/course-ratings/${courseId}/summary`);
 
     if (!res.ok) {
       throw new Error("Failed to fetch rating summary.");
@@ -46,7 +47,7 @@ export const courseRatingService = {
   },
 
   async getMyRating(courseId: string): Promise<MyCourseRating | null> {
-    const res = await fetch(`${API_URL}/course-ratings/${courseId}/me`, {
+    const res = await apiFetch(`${API_URL}/course-ratings/${courseId}/me`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -63,7 +64,7 @@ export const courseRatingService = {
   },
 
   async saveMyRating(courseId: string, ratingValue: number): Promise<MyCourseRating> {
-    const res = await fetch(`${API_URL}/course-ratings/${courseId}/me`, {
+    const res = await apiFetch(`${API_URL}/course-ratings/${courseId}/me`, {
       method: "PUT",
       headers: getAuthHeaders(),
       body: JSON.stringify({ value: ratingValue }),
@@ -77,7 +78,7 @@ export const courseRatingService = {
   },
 
   async deleteMyRating(courseId: string): Promise<void> {
-    const res = await fetch(`${API_URL}/course-ratings/${courseId}/me`, {
+    const res = await apiFetch(`${API_URL}/course-ratings/${courseId}/me`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });
