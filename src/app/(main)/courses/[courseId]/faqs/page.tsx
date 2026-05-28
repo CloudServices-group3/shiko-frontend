@@ -16,7 +16,6 @@ type FaqItem = {
 
 export default async function CourseFaqsPage({ params }: PageProps) {
   const { courseId } = await params;
-  console.log("CourseId:", courseId);
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_FAQ_API_URL}/api/faqs/course/${courseId}`,
