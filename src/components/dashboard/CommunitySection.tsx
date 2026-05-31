@@ -2,15 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
-type CommunityLink = {
-  id: string;
-  title: string;
-  url: string;
-  iconName: string;
-  sortOrder: number;
-  isActive: boolean;
-};
+import {
+  communityService,
+  type CommunityLink,
+} from "@/services/community-service";
 
 export default function CommunitySection() {
   const [links, setLinks] = useState<CommunityLink[]>([]);
@@ -18,16 +13,7 @@ export default function CommunitySection() {
   useEffect(() => {
     async function fetchCommunityLinks() {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/api/community-links`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch community links");
-        }
-
-        const data = await response.json();
-
+        const data = await communityService.getCommunityLinks();
         setLinks(data);
       } catch (error) {
         console.error(error);
