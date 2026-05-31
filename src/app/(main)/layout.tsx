@@ -5,13 +5,15 @@ import { useEffect, useState } from "react";
 import SidebarItem from "@/components/layout/SidebarItem";
 import Image from "next/image";
 import { LayoutGrid, Video, GraduationCap, User, LogOut, ShieldCheck } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function MainLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
 
   const router = useRouter();  // use router to redirect
+  const pathname = usePathname();
+  const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
 
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -110,7 +112,12 @@ export default function MainLayout({
             <SidebarItem href="/profile" label="Profile" icon={User} />
 
             {isAdmin && (
-              <SidebarItem href="/admin" label="Admin" icon={ShieldCheck} />
+              <SidebarItem
+                href="/admin"
+                label="Admin"
+                icon={ShieldCheck}
+                isActive={isAdminRoute}
+              />
             )}
 
             {/* send in 'isActive' to set Log Out to orange */}
