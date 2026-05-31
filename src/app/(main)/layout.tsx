@@ -1,8 +1,10 @@
 "use client";
 
+import { isCurrentUserAdmin } from "@/services/current-user-service";
+import { useEffect, useState } from "react";
 import SidebarItem from "@/components/layout/SidebarItem";
 import Image from "next/image";
-import { LayoutGrid, Video, GraduationCap, User, LogOut } from "lucide-react";
+import { LayoutGrid, Video, GraduationCap, User, LogOut, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function MainLayout({
@@ -10,6 +12,27 @@ export default function MainLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 
   const router = useRouter();  // use router to redirect
+
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      const token = sessionStorage.getItem("token");
+
+      if (!token) {
+        router.replace("/sign-in");
+        return;
+      }
+
+      setIsAdmin(isCurrentUserAdmin());
+      setIsCheckingAuth(false);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [router]);
 
   const handleLogout = async () => {
     const token = sessionStorage.getItem("token");
@@ -32,8 +55,12 @@ export default function MainLayout({
 
     sessionStorage.clear();
     localStorage.clear();
-    router.push("/sign-in")
+    router.replace("/sign-in");
   };
+
+  if (isCheckingAuth) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-bg">
@@ -78,14 +105,18 @@ export default function MainLayout({
             <SidebarItem href="/live-chat" label="Live Chat" icon={Video} />
           </ul>
 
-        <p className="figma-b2 font-bold text-aaa mb-6">GENERAL</p>
-        <ul className="space-y-2">
-          <SidebarItem href="/profile" label="Profile" icon={User} />
-          {/* send in 'isActive' to set Log Out to orange */}
-          <SidebarItem label="Log Out" icon={LogOut} isActive onClick={handleLogout} />
-         
-        </ul>
-      </aside>
+          <p className="figma-b2 font-bold text-aaa mb-6">GENERAL</p>
+          <ul className="space-y-2">
+            <SidebarItem href="/profile" label="Profile" icon={User} />
+
+            {isAdmin && (
+              <SidebarItem href="/admin" label="Admin" icon={ShieldCheck} />
+            )}
+
+            {/* send in 'isActive' to set Log Out to orange */}
+            <SidebarItem label="Log Out" icon={LogOut} isDanger onClick={handleLogout} />
+          </ul>
+        </aside>
 
         {/* 4. MAIN CONTENT */}
         <main className="overflow-y-auto">
