@@ -1,6 +1,8 @@
 import { apiFetch } from "./api-client";
 
-const API_URL = process.env.NEXT_PUBLIC_COMMUNITY_API_URL;
+const API_URL =
+  process.env.NEXT_PUBLIC_COMMUNITY_API_URL ??
+  "https://shiko-group3-community-api-g9dqdwdkgsd2fyg6.swedencentral-01.azurewebsites.net";
 
 export type CommunityLink = {
   id: string;
