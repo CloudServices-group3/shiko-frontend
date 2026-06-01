@@ -6,6 +6,8 @@ type FormInputProps = {
   placeholder?: string;
   required?: boolean;
   error?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function FormInput({
@@ -14,6 +16,8 @@ export default function FormInput({
   placeholder,
   required = false,
   error,
+  value,
+  onChange,
 }: FormInputProps) {
   return (
     <div className="space-y-2">
@@ -23,6 +27,8 @@ export default function FormInput({
         type={type}
         required={required}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange}
         className={`w-full rounded-xl border p-4 outline-none transition ${
           error
             ? "border-red-500"
