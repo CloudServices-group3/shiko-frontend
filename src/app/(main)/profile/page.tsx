@@ -1,9 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FormLabel } from "@/components/profile/FormLabel";
 import  FormInput from "@/components/profile/FormInput";
 import FormTextarea from "@/components/profile/FormTextarea";
+import SkillsSection from "@/components/profile/SkillsSection";
+import AchievementsSection from "@/components/profile/AchievementsSection";
+
 
 export default function Profile()  {
   // const [activeTab, setActiveTab] = useState("tab1");
@@ -16,6 +19,15 @@ export default function Profile()  {
   type TabId = (typeof tabs)[number]["id"];
 
   const [activeTab, setActiveTab] = useState<TabId>("tab1");
+  const [userId, setUserId] = useState<string>("");
+
+  useEffect(() => {
+    const user = sessionStorage.getItem("user");
+    if (user) {
+      const parsed = JSON.parse(user);
+      setUserId(parsed.userId);
+    }
+  }, []);
 
   const tabContent = {
 
@@ -35,6 +47,13 @@ export default function Profile()  {
                 <p className="text-aaa text-b2/6">A passionate UI/UX Designer with hands-on experience designing intuitive, user-centered digital products across mobile and web platforms. With a strong foundation in user research, wireframing, prototyping, and visual design, the instructor focuses on creating experiences that are not only visually appealing but also solve real user problems. Having worked on projects in fintech, healthcare, travel, real estate, and SaaS, the instructor brings real-world insights into the classroom bridging the gap between theory and industry practice.</p>
               </div>
             </div>
+
+            {/* Skills section - /dana */}
+            <SkillsSection />
+
+            {/* Achievements section - /dana */}
+            <AchievementsSection userId="test-user-1" />
+
           </div>
           {/* Tabcontent Profile - Right section */}
           <div className="rounded-xl bg-white pt-12 pl-8 pr-8 pb-12"> 
