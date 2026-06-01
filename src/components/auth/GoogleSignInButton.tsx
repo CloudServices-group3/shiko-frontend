@@ -19,9 +19,10 @@ export default function GoogleSignInButton() {
         return;
       }
 
+
       // initialize google login, using client-id added to an environment variable
       window.google.accounts.id.initialize({
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+        client_id:"841927824486-pd6d4iq1tvtqfe4carqip5q1smtgikoc.apps.googleusercontent.com",
         callback: async (response: { credential: string }) => {
           const result = await fetch("https://shiko-externalauth-cje2hud5d8akbkhs.swedencentral-01.azurewebsites.net/api/external-auth/google", {
             method: "POST",
