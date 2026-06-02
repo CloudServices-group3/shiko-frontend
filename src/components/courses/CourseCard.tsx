@@ -22,31 +22,28 @@ export default function CourseCard({
   averageRating,
   totalVotes,
 }: CourseCardProps) {
-  async function handleViewDetailsClick() {
-    const popularCoursesApiUrl = process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL;
+async function handleViewDetailsClick() {
+  const popularCoursesApiUrl =
+    process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL ??
+    "https://shiko-group3-popular-courses-api-ananebcbe8b5ana3.swedencentral-01.azurewebsites.net";
 
-    if (!popularCoursesApiUrl) {
-      console.error("NEXT_PUBLIC_POPULAR_COURSES_API_URL is not configured.");
-      return;
-    }
-
-    try {
-      await fetch(`${popularCoursesApiUrl}/api/popular-courses/click`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          courseId: id,
-          title,
-          description: `${lessonCount} Lesson • ${duration}`,
-          iconUrl: "/icons/popular-this-week/course.svg",
-        }),
-      });
-    } catch (error) {
-      console.error("Failed to track course click:", error);
-    }
+  try {
+    await fetch(`${popularCoursesApiUrl}/api/popular-courses/click`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseId: id,
+        title,
+        description: `${lessonCount} Lesson • ${duration}`,
+        iconUrl: "/icons/popular-this-week/course.svg",
+      }),
+    });
+  } catch (error) {
+    console.error("Failed to track course click:", error);
   }
+}
 
   return (
     <div className="bg-fff rounded-xl overflow-hidden shadow-sm">
