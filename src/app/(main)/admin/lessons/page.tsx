@@ -1,38 +1,20 @@
 "use client";
 
+import { courseService, type CourseBase } from "@/services/course-service";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   AdminLessonExerciseItem,
   lessonExerciseService,
 } from "@/services/lesson-exercise-service";
 
-const COURSE_API_URL =
-  "https://shiko-course-api-dana-awdagkgff6gfgtbp.swedencentral-01.azurewebsites.net/api";
 
-type AdminCourse = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  lessonCount: number;
-  duration: string;
-};
-
-const fallbackCourses: AdminCourse[] = [
-  {
-    id: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
-    title: "Digital Marketing",
-    imageUrl: "",
-    lessonCount: 0,
-    duration: "",
-  },
-];
 
 function sortLessonsByOrder(lessons: AdminLessonExerciseItem[]) {
   return [...lessons].sort((a, b) => a.orderIndex - b.orderIndex);
 }
 
 export default function AdminLessonsPage() {
-  const [courses, setCourses] = useState<AdminCourse[]>([]);
+  const [courses, setCourses] = useState<CourseBase[]>([]);
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [lessons, setLessons] = useState<AdminLessonExerciseItem[]>([]);
 
@@ -64,25 +46,19 @@ export default function AdminLessonsPage() {
         setIsLoadingCourses(true);
         setErrorMessage("");
 
-        const res = await fetch(`${COURSE_API_URL}/courses`);
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch courses.");
-        }
-
-        const data: AdminCourse[] = await res.json();
+        const data = await courseService.getCourses();
 
         setCourses(data);
 
         if (data.length > 0) {
           setSelectedCourseId(data[0].id);
+        } else {
+          setSelectedCourseId("");
         }
       } catch {
-        setCourses(fallbackCourses);
-        setSelectedCourseId(fallbackCourses[0].id);
-        setErrorMessage(
-          "Could not load courses from Course Provider. Showing fallback courses for now."
-        );
+        setCourses([]);
+        setSelectedCourseId("");
+        setErrorMessage("Could not load courses from Course Provider.");
       } finally {
         setIsLoadingCourses(false);
       }
