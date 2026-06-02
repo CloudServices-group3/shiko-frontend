@@ -5,134 +5,70 @@ import Image from "next/image";
 import { FormLabel } from "@/components/profile/FormLabel";
 import FormInput from "@/components/profile/FormInput";
 import FormTextarea from "@/components/profile/FormTextarea";
+import { profileService, type Profile } from "@/services/profile-service";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<Profile>({
     firstName: "",
     lastName: "",
     phoneNumber: "",
     description: "",
-    profileImage: "",
+    profileImageUrl: "",
   });
 
   // const [profilePasseword, setProfilePassword] = useState({
   //   currentPassword: "",
   //   newPassWord: "",
   //   newPasswordConfirm: "",
-  // })
-
-  const fetchProfile = async (jwt: string) => {
-    try {
-      const user = sessionStorage.getItem("user");
-
-      if (!user) {
-        return;
-      }
-
-      const userObj = JSON.parse(user);
-      const userId = userObj.userId;
-
-      const response = await fetch(
-        `https://shiko-profile-provider.azurewebsites.net/api/profiles/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      if (response.status === 401) {
-        sessionStorage.removeItem("token");
-        window.location.href = "/sign-in";
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile");
-      }
-
-      const data = await response.json();
-
-      setProfile({
-        firstName: data.firstName ?? "",
-        lastName: data.lastName ?? "",
-        phoneNumber: data.phoneNumber ?? "",
-        description: data.description ?? "",
-        profileImage: data.profileImage ?? "",
-      });
-    } catch (error) {
-      console.error("Error fetching profile", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // })  
 
   // EFFECT: Get token and username from session storage
   useEffect(() => {
-    const jwt = sessionStorage.getItem("token");
-    if (!jwt) {
-      setLoading(false);
-      window.location.replace("/sign-in");
-      return;
-    }
-    fetchProfile(jwt);
+    const loadProfile = async () => {
+      try {
+        const data = await profileService.getProfile();
+        setProfile(data);
+      }
+      catch (error) {
+        console.error(error);
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+    loadProfile();
   }, []);
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const jwt = sessionStorage.getItem("token");
-
-    if (!jwt) return;
-
-    try {
+    try{
       setSaving(true);
 
-      const user = sessionStorage.getItem("user");
-
-      if (!user) {
-        return;
-      }
-
-      const userObj = JSON.parse(user);
-      const userId = userObj.userId;
-
-      const response = await fetch(
-        `https://shiko-profile-provider.azurewebsites.net/api/profiles/${userId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-          body: JSON.stringify(profile),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile");
-      }
+      await profileService.updateProfile(profile);
 
       setSuccess(true);
 
       setTimeout(() => {
         setSuccess(false);
       }, 3000);
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
-    } finally {
+    }
+    finally {
       setSaving(false);
     }
   };
 
+
   const tabs = [
     { id: "tab1", label: "General" },
-    { id: "tab2", label: "Settings" },
+    // { id: "tab2", label: "Settings" },
   ] as const;
 
   type TabId = (typeof tabs)[number]["id"];
@@ -152,7 +88,7 @@ export default function Profile() {
               className="w-full"
             />
             <div className="justify-center items-center flex flex-col gap-4 -mt-13 mb-6">
-              <div className="w-25 h-25 rounded-full bg-eee overflow-hidden border-2 border-fff shadow-sm"></div>
+               <div className="w-25 h-25 "></div>{/* rounded-full bg-eee overflow-hidden border-2 border-fff shadow-sm */}
               <h2 className="text-h2 font-semibold text-center">
                 {profile.firstName} {profile.lastName}
               </h2>
@@ -171,7 +107,6 @@ export default function Profile() {
                 Profile updated successfully.
               </p>
             )}
-            <form>  </form>
             {/* Upload profileimage */}
             <form className="space-y-8" noValidate onSubmit={handleSubmit}>
               <div className="mb-2">
