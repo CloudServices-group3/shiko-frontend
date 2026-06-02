@@ -1,11 +1,19 @@
-export default function CourseFaqsPage() {
-  return (
-    <section className="rounded-xl bg-fff p-6">
-      <h2 className="figma-h2 mb-4 text-p1">FAQs</h2>
+import CourseFaqsClient from "@/components/courses/faqs/course-faqs-client";
 
-      <p className="figma-b2 text-aaa">
-        FAQs for this course will be shown here.
-      </p>
+type PageProps = {
+  params: Promise<{
+    courseId: string;
+  }>;
+};
+
+export default async function CourseFaqsPage({ params }: PageProps) {
+  const { courseId } = await params;
+
+  return (
+    <section>
+      <div className="mt-8">
+        <CourseFaqsClient courseId={courseId} />
+      </div>
     </section>
   );
 }

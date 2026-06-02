@@ -1,15 +1,15 @@
 "use client";
-
+ 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
+ 
 type CourseDetailsTabsProps = {
   courseId: string;
 };
-
+ 
 export default function CourseDetailsTabs({ courseId }: CourseDetailsTabsProps) {
   const pathname = usePathname();
-
+ 
   const overviewHref = `/courses/${courseId}`;
   const faqsHref = `/courses/${courseId}/faqs`;
   const reviewsHref = `/courses/${courseId}/reviews`;
@@ -27,7 +27,14 @@ export default function CourseDetailsTabs({ courseId }: CourseDetailsTabsProps) 
       >
         Overview
       </Link>
-
+ 
+      <Link
+        href={faqsHref}
+        className={getTabClassName(pathname === faqsHref)}
+      >
+        FAQs
+      </Link>
+ 
       <Link
         href={faqsHref}
         className={getTabClassName(pathname === faqsHref)}
