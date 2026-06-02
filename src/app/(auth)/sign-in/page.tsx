@@ -2,6 +2,7 @@
 import {useState} from "react";
 import { useRouter } from "next/navigation";
 import {authService} from "@/services/auth-service";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 export default function SignIn() {
   const router = useRouter();
@@ -31,6 +32,10 @@ export default function SignIn() {
         case "NotFound":
           router.push("/almost-there");
         break;
+
+        case "PendingVerification":
+          router.push("/verification-needed");
+        break;
         
         case "ReadyForLogin":
           router.push("/sign-in-password");
@@ -40,14 +45,22 @@ export default function SignIn() {
           setError("An unexpected error occurred. Please try again.");
         break;
       }
-    } catch (err) {
+    } catch (err) 
+    {
+      console.error(err);
+
+      if(err instanceof Error) 
+        setError(err.message);
+      else
       console.error(err);
       setError("Something went wrong.");
+
     } finally {
       setLoading(false);
     }
   }
 
+  
 
   return (
     <section className="rounded-3xl bg-fff w-full">
@@ -111,6 +124,23 @@ export default function SignIn() {
                 className="w-[700px] h-[70px] rounded-xl bg-p2 text-fff text-h2 border-2 border-transparent hover:border-black cursor-pointer transition-colors">
                   {loading ? "Loading..." : "Continue"}
               </button>
+
+          
+              <div className="space-y-4">
+               {/* Divider */}
+
+                
+              <div className="flex items-center gap-4 w-[700px]">
+               <div className="flex-1 h-px bg-ddd" />
+               <span className="figma-b2 text-aaa">or continue with</span>
+                   <div className="flex-1 h-px bg-ddd" />
+              </div>
+
+              {/* Google login */}
+             <div className="flex justify-center items-center w-[700px]">
+                <GoogleSignInButton />
+                  </div>
+               </div>
 
           </div>
         </div>

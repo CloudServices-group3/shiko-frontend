@@ -1,12 +1,15 @@
 "use client";
+
 import CourseCard from "./CourseCard";
 
 type Course = {
-  id: string;  
+  id: string;
   title: string;
   imageUrl: string;
   lessonCount: number;
   duration: string;
+  averageRating: number;
+  totalVotes: number;
 };
 
 type CourseGridProps = {
@@ -24,6 +27,8 @@ export default function CourseGrid({ courses }: CourseGridProps) {
           imageUrl={course.imageUrl}
           lessonCount={course.lessonCount}
           duration={course.duration}
+          averageRating={course.averageRating}
+          totalVotes={course.totalVotes}
         />
       ))}
     </div>

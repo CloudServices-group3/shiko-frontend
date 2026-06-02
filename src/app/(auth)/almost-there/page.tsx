@@ -2,7 +2,7 @@
 
 import { useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
-import { authService, saveAuth } from "@/services/auth-service";
+import { authService } from "@/services/auth-service";
 
 export default function AlmostThere() {
   const router = useRouter();
@@ -35,16 +35,21 @@ export default function AlmostThere() {
       setLoading(true);
       setError("");
 
-      //Register the user.
-      const result = await authService.register(email, password);
+      const userId = await authService.register(email, password);
 
-      sessionStorage.removeItem("email");
+      const response = await fetch(`https://shiko-profile-provider.azurewebsites.net/api/profiles/userId=${userId}`,
+        {method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+    });
 
-      //Save JWT token
-      saveAuth(result);
+    if (!response.ok) {
+      throw new Error("Failed to create profile")
+    }
 
       // Redirect the user to dashboard.
-      router.push("/dashboard");
+      router.push("/verification-needed");
     } catch (err) {
       console.error(err);
       setError("Something went wrong.");
