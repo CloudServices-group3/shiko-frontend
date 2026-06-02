@@ -1,20 +1,27 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { achievementsService, Achievement } from "@/services/achievementsService";
+import Image from "next/image";
+import {
+  achievementsService,
+  Achievement,
+} from "@/services/achievementsService";
 
 export default function AchievementsSection({ userId }: { userId: string }) {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
-    fetchAchievements();
-  }, []);
+    if (userId) {
+      fetchAchievements();
+    }
+  }, [userId]);
 
   async function fetchAchievements() {
     try {
       const data = await achievementsService.getAchievements(userId);
       setAchievements(data);
     } catch (err) {
-      console.error(err);
+      console.error("Achievements error:", err);
     }
   }
 
@@ -23,24 +30,36 @@ export default function AchievementsSection({ userId }: { userId: string }) {
       await achievementsService.deleteAchievement(id);
       fetchAchievements();
     } catch (err) {
-      console.error(err);
+      console.error("Delete achievement error:", err);
     }
   }
 
   return (
     <div className="mt-6">
       <h2 className="text-lg font-semibold mb-3">Achievements</h2>
+
       <div className="flex flex-wrap gap-3">
         {achievements.map((achievement) => (
           <div
             key={achievement.id}
-            className="flex flex-col items-center gap-1 bg-orange-50 px-4 py-2 rounded-xl text-sm"
+            className="relative flex items-center justify-center rounded-full bg-orange-50 p-2"
+            title={achievement.title}
           >
-            <img src={achievement.iconUrl} alt={achievement.title} className="w-8 h-8" />
-            <span className="text-gray-700 text-xs">{achievement.title}</span>
+            <Image
+              src={
+                achievement.iconUrl ||
+                "/images/profile/achievements/trophy.png"
+              }
+              alt={achievement.title || "Achievement"}
+              width={40}
+              height={40}
+              className="h-10 w-10"
+            />
+
             <button
+              type="button"
               onClick={() => deleteAchievement(achievement.id)}
-              className="text-gray-400 hover:text-red-500 text-xs"
+              className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-100 text-[10px] text-gray-400 hover:text-red-500"
             >
               ×
             </button>
@@ -50,4 +69,5 @@ export default function AchievementsSection({ userId }: { userId: string }) {
     </div>
   );
 }
-// AchievementsSection visar och tar bort achievements för en användare på profilsidan.
+
+// Dana - AchievementsSection visar och tar bort achievements för en användare på profilsidan.

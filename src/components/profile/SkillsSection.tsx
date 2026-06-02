@@ -3,40 +3,49 @@
 import { useEffect, useState } from "react";
 import { skillsService, Skill } from "@/services/skillsService";
 
-export default function SkillsSection() {
+type SkillsSectionProps = {
+  userId: string;
+};
+
+export default function SkillsSection({ userId }: SkillsSectionProps) {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [newSkill, setNewSkill] = useState("");
 
   useEffect(() => {
-    fetchSkills();
-  }, []);
+    if (userId) {
+      fetchSkills();
+    }
+  }, [userId]);
 
   async function fetchSkills() {
     try {
-      const data = await skillsService.getSkills();
+      const data = await skillsService.getSkills(userId);
       setSkills(data);
     } catch (err) {
-      console.error(err);
+      console.error("Skills error:", err);
     }
   }
 
   async function addSkill() {
-    if (!newSkill.trim()) return;
+    if (!newSkill.trim() || !userId) return;
+
     try {
-      await skillsService.addSkill(newSkill);
+      await skillsService.addSkill(userId, newSkill);
       setNewSkill("");
       fetchSkills();
     } catch (err) {
-      console.error(err);
+      console.error("Add skill error:", err);
     }
   }
 
   async function deleteSkill(id: number) {
+    if (!userId) return;
+
     try {
-      await skillsService.deleteSkill(id);
+      await skillsService.deleteSkill(userId, id);
       fetchSkills();
     } catch (err) {
-      console.error(err);
+      console.error("Delete skill error:", err);
     }
   }
 
@@ -51,7 +60,9 @@ export default function SkillsSection() {
             className="flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
           >
             {skill.name}
+
             <button
+              type="button"
               onClick={() => deleteSkill(skill.id)}
               className="text-gray-400 hover:text-red-500 ml-1"
             >
@@ -69,7 +80,9 @@ export default function SkillsSection() {
           placeholder="Lägg till skill..."
           className="border rounded px-3 py-1 text-sm"
         />
+
         <button
+          type="button"
           onClick={addSkill}
           className="bg-orange-500 text-white px-4 py-1 rounded text-sm hover:bg-orange-600"
         >
@@ -79,5 +92,3 @@ export default function SkillsSection() {
     </div>
   );
 }
-
-// UI-komponenten som visar, lägger till och tar bort skills på profilsidan.
