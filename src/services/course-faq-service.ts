@@ -1,6 +1,8 @@
 import { apiFetch } from "./api-client";
 
-const API_URL = process.env.NEXT_PUBLIC_FAQ_API_URL;
+const API_URL =
+  process.env.NEXT_PUBLIC_FAQ_API_URL ??
+  "https://shiko-group3-faq-api-gtceg8gjdegmhsf6.swedencentral-01.azurewebsites.net";
 
 export type FaqItem = {
   id: string;
