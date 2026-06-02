@@ -14,6 +14,10 @@ type PopularCourse = {
   lastClickedAt: string;
 };
 
+const API_URL =
+  process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL ??
+  "https://shiko-group3-popular-courses-api-ananebcbe8b5ana3.swedencentral-01.azurewebsites.net";
+
 export default function PopularThisWeek() {
   const [popularCourses, setPopularCourses] = useState<PopularCourse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +25,9 @@ export default function PopularThisWeek() {
   useEffect(() => {
     async function fetchPopularCourses() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_POPULAR_COURSES_API_URL}/api/popular-courses`);
+        const response = await fetch(
+          `${API_URL}/api/popular-courses`
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch popular courses");

@@ -29,8 +29,9 @@ export default function Profile() {
   //   currentPassword: "",
   //   newPassWord: "",
   //   newPasswordConfirm: "",
-  // })
+  // })  
 
+  // EFFECT: Get token and username from session storage
   useEffect(() => {
     const loadProfile = async () => {
       try {
@@ -44,24 +45,30 @@ export default function Profile() {
     };
     loadProfile();
   }, []);
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
+    try{
       setSaving(true);
+
       await profileService.updateProfile(profile);
+
       setSuccess(true);
 
       setTimeout(() => {
         setSuccess(false);
       }, 3000);
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
-    } finally {
+    }
+    finally {
       setSaving(false);
     }
   };
+
 
   const tabs = [
     { id: "tab1", label: "General" },
