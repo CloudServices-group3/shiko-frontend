@@ -7,6 +7,12 @@ import Image from "next/image";
 import { LayoutGrid, Video, GraduationCap, User, LogOut, ShieldCheck } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
+// JWT-decoder 
+function parseJwt(token: string) {
+  const base64 = token.split(".")[1];
+  return JSON.parse(atob(base64));
+}
+
 export default function MainLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -17,6 +23,8 @@ export default function MainLayout({
 
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  //set state for email
+  const [userEmail, setUserEmail] = useState<string>("user@email.com");
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -25,6 +33,16 @@ export default function MainLayout({
       if (!token) {
         router.replace("/sign-in");
         return;
+      }
+
+      try {
+        // decode token and save e-mail to state
+        const decoded = parseJwt(token);
+        if (decoded && decoded.email) {
+          setUserEmail(decoded.email);
+        }
+      } catch (err) {
+        console.error("Something went wrong trying to decode token", err);
       }
 
       setIsAdmin(isCurrentUserAdmin());
@@ -90,8 +108,7 @@ export default function MainLayout({
               
             </div>
             <div className="text-left">
-              <p className="text-b1 font-bold">Profile name</p>
-              <p className="figma-b2 text-aaa">Profile@email.com</p>
+              <p className="figma-b2 text-aaa">{userEmail}</p>
             </div>
           </div>
         </header>
