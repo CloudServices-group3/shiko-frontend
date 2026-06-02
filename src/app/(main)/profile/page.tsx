@@ -7,7 +7,13 @@ import FormInput from "@/components/profile/FormInput";
 import FormTextarea from "@/components/profile/FormTextarea";
 import { profileService, type Profile } from "@/services/profile-service";
 
+// Dana - Skills & Achievements
+import SkillsSection from "@/components/profile/SkillsSection";
+import AchievementsSection from "@/components/profile/AchievementsSection";
+
 export default function Profile() {
+  const DEMO_USER_ID = "11111111-1111-1111-1111-111111111111";
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -31,11 +37,9 @@ export default function Profile() {
       try {
         const data = await profileService.getProfile();
         setProfile(data);
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -88,18 +92,29 @@ export default function Profile() {
               className="w-full"
             />
             <div className="justify-center items-center flex flex-col gap-4 -mt-13 mb-6">
-               <div className="w-25 h-25 "></div>{/* rounded-full bg-eee overflow-hidden border-2 border-fff shadow-sm */}
+              <div className="w-25 h-25 "></div>
+              {/* rounded-full bg-eee overflow-hidden border-2 border-fff shadow-sm */}
               <h2 className="text-h2 font-semibold text-center">
                 {profile.firstName} {profile.lastName}
               </h2>
             </div>
+
             <div>
               <h2 className="figma-title font-semibold pl-4">Bio</h2>
               <div className="bg-bg rounded-xl p-7 m-4">
                 <p className="text-aaa text-b2/6">{profile.description}</p>
               </div>
             </div>
+
+            <div className="px-4 mt-4">
+              <SkillsSection userId={DEMO_USER_ID} />
+            </div>
+
+            <div className="px-4 mt-6">
+              <AchievementsSection userId={DEMO_USER_ID} />
+            </div>
           </div>
+
           {/* Tabcontent Profile - Right section */}
           <div className="rounded-xl bg-white pt-12 pl-8 pr-8 pb-12">
             {success && (
@@ -107,6 +122,7 @@ export default function Profile() {
                 Profile updated successfully.
               </p>
             )}
+
             {/* Upload profileimage */}
             <form className="space-y-8" noValidate onSubmit={handleSubmit}>
               <div className="mb-2">
@@ -177,82 +193,8 @@ export default function Profile() {
         </div>
       </div>
     ),
-
-    tab2: (
-      <div>
-        {/* Tabcontent Settings - Left section */}
-        <div className="grid gap-6 grid-cols-[450px_1fr] mb-6">
-          <div className="p-4">
-            <h3 className="text-title font-semibold">Password</h3>
-            <p className="text-aaa">
-              Please enter your current password to change your password.
-            </p>
-          </div>
-          {/* Tabcontent Settings - Right section */}
-          <div className="rounded-xl bg-white pt-12 pl-8 pr-8 pb-12">
-            <h3 className="text-title font-semibold">Password</h3>
-            <p className="text-b2 text-aaa pb-8 pt-2">
-              Change password. Verification code will be sent to your email
-              address.
-            </p>
-            <form className="space-y-8">
-              <div className="mb-2">
-                <FormLabel htmlFor="currrentPassword" required>
-                  Current password
-                </FormLabel>
-              </div>
-              {/* <FormInput id="currentPassword" type="password" placeholder="Current password"  /> */}
-
-              <div className="mb-2">
-                <FormLabel htmlFor="newPassword" required>
-                  New password
-                </FormLabel>
-              </div>
-              <div>
-                {/* <FormInput id="newPassword" type="password" required placeholder="New password" /> */}
-                <span className="text-aaa">
-                  Your new password must be more than 10 characters long.
-                </span>
-              </div>
-
-              <div className="mb-2">
-                <FormLabel htmlFor="confirmNewPassword" required>
-                  Confirm new password
-                </FormLabel>
-              </div>
-              {/* <FormInput id="confirmNewPassword" type="password" placeholder="Confirm new password" /> */}
-
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 rounded-lg bg-p2 px-10 py-3 text-fff transition hover:opacity-90 cursor-pointer"
-              >
-                Save
-              </button>
-            </form>
-          </div>
-        </div>
-        {/* Tabcontent Settings - Remove Account */}
-        <div className="grid gap-6 grid-cols-[450px_1fr]">
-          {/* Tabcontent Settings - Left section */}
-          <div className="p-4">
-            <h3 className="text-title font-semibold">Remove Account</h3>
-            <p className="text-aaa">Delete account and personal information.</p>
-          </div>
-          {/* Tabcontent Settings - Right section */}
-          <div className="rounded-xl bg-white p-8">
-            <form className="">
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 rounded-xl border border-p2 px-10 py-3 text-p2 transition hover:opacity-90 cursor-pointer"
-              >
-                Remove Account
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    ),
   };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -260,32 +202,29 @@ export default function Profile() {
   return (
     <section className="w-full">
       <h1 className="text-h1 font-semibold">Profile</h1>
-      {/* Tabmenu */}
-      <>
-        {/* Background */}
-        <div className="w-full flex">
-          {/* Tabsection */}
-          <div className="w-full rounded-3xl space-y-5">
-            <div className="flex flex-wrap gap-4 mt-6 mb-8">
-              {/* Tabs */}
-              {tabs.map((tab) => (
-                <button
-                  type="button"
-                  key={tab.id}
-                  className={`px-6 py-4 text-b1 ${activeTab === tab.id ? "bg-p1 rounded-lg text-white" : "text-aaa hover:text-p2 cursor-pointer"}`}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            <div>
-              {/* Tab Content */}
-              {tabContent[activeTab]}
-            </div>
+
+      <div className="w-full flex">
+        <div className="w-full rounded-3xl space-y-5">
+          <div className="flex flex-wrap gap-4 mt-6 mb-8">
+            {tabs.map((tab) => (
+              <button
+                type="button"
+                key={tab.id}
+                className={`px-6 py-4 text-b1 ${
+                  activeTab === tab.id
+                    ? "bg-p1 rounded-lg text-white"
+                    : "text-aaa hover:text-p2 cursor-pointer"
+                }`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
+
+          <div>{tabContent[activeTab]}</div>
         </div>
-      </>
+      </div>
     </section>
   );
 }

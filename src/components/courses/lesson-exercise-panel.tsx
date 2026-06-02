@@ -57,7 +57,7 @@ export default function LessonExercisePanel({ courseId }: LessonExercisePanelPro
   }
 
   if (isLoading) {
-    return (
+    return ( 
       <aside className="rounded-[25px] bg-fff p-7.5">
         <h2 className="figma-title text-p1">Lesson Exercise</h2>
         <p className="figma-b3 mt-5 text-aaa">Loading lessons...</p>
