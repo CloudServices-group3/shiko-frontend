@@ -35,7 +35,7 @@ export default function AlmostThere() {
       setLoading(true);
       setError("");
 
-      await authService.register(email, password);
+      const userId = await authService.register(email, password);
 
       // Redirect the user to dashboard.
       router.push("/verification-needed");
@@ -46,8 +46,6 @@ export default function AlmostThere() {
       setLoading(false);
     }
   }
-
-
 
   return (
     <section className="rounded-3xl bg-fff w-full">
@@ -65,7 +63,7 @@ export default function AlmostThere() {
 
           <img
             src="images/auth/auth-img.svg"
-            alt="A image of gears"
+            alt="An image of gears"
             className="h-full w-full object-cover rounded-4xl"
           /> 
         </div>
