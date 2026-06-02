@@ -6,19 +6,11 @@ import { usePathname } from "next/navigation";
 const adminTabs = [
   {
     href: "/admin",
-    label: "Overview",
-  },
-  {
-    href: "/admin/courses",
-    label: "Courses",
+    label: "Shiko Admin",
   },
   {
     href: "/admin/lessons",
     label: "Lessons",
-  },
-  {
-    href: "/admin/faqs",
-    label: "FAQs",
   },
 ];
 
@@ -36,8 +28,8 @@ export default function AdminTabs() {
             href={tab.href}
             className={
               isActive
-                ? "figma-b2 rounded-[9px] bg-p1 px-6 py-4 text-fff"
-                : "figma-b2 rounded-[9px] bg-bg px-6 py-4 text-aaa"
+                ? "figma-b2 rounded-[9px] bg-p1 px-6 py-3 text-fff"
+                : "figma-b2 rounded-[9px] bg-bg px-6 py-3 text-aaa"
             }
           >
             {tab.label}
