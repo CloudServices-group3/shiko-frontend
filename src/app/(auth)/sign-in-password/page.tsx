@@ -65,7 +65,7 @@ export default function SignInPassword() {
 
           <img
             src="/images/auth/auth-img.svg"
-            alt="A image of gears"
+            alt="An image of gears"
             className="h-full w-full object-cover rounded-4xl"/>
         </div>
 
