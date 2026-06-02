@@ -102,11 +102,6 @@ export default function MainLayout({
         {/* TOPBAR */}
         <header className="bg-fff rounded-3xl px-8 flex items-center justify-end">
           <div className="flex items-center gap-4">
-            
-            {/* Placeholder profile pic */}
-            <div className="w-12 h-12 rounded-full bg-eee overflow-hidden border-2 border-fff shadow-sm">
-              
-            </div>
             <div className="text-left">
               <p className="figma-b2 text-aaa">{userEmail}</p>
             </div>
