@@ -34,7 +34,11 @@ export default function CourseDetailsTabs({ courseId }: CourseDetailsTabsProps) 
       >
         FAQs
       </Link>
+<<<<<<< Updated upstream
  
+=======
+
+>>>>>>> Stashed changes
       <Link
         href={reviewsHref}
         className={getTabClassName(pathname === reviewsHref)}
