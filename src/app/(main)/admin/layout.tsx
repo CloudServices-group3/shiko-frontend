@@ -7,9 +7,6 @@ export default function AdminLayout({
     <section className="rounded-[25px] bg-fff p-7.5">
       <div>
         <p className="figma-b2 font-bold text-aaa">ADMIN PANEL</p>
-        <p className="figma-b2 mt-3 max-w-160 text-aaa">
-          Create course first, then add what you want in the tabs below.
-        </p>
       </div>
 
       <AdminTabs />

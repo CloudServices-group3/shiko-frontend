@@ -25,4 +25,5 @@ export const archivo = localFont({
   ],
   variable: "--font-archivo",
   display: "swap",
+  preload: false,
 });
