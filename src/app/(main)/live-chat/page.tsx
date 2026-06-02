@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { AzureCommunicationTokenCredential } from "@azure/communication-common";
 import { ChatClient, ChatThreadClient, ChatMessageReceivedEvent } from "@azure/communication-chat";
 import { Send } from "lucide-react";
+import { apiFetch } from "@/services/api-client";
 
 // CONSTANTS
 const CHAT_API_URL = "https://azure-chat-webapp-crf4ded2dzf0b5d0.swedencentral-01.azurewebsites.net";
@@ -76,7 +77,7 @@ export default function LiveChat() {
         setError(null);
 
         // Call backend to join global chat
-        const response = await fetch(`${CHAT_API_URL}/api/chat/join/${COURSE_ID}`, {
+        const response = await apiFetch(`${CHAT_API_URL}/api/chat/join/${COURSE_ID}`, {
           method: "POST",
           headers: {
             "Accept": "application/json",

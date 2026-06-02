@@ -11,31 +11,33 @@ export default function CourseDetailsTabs({ courseId }: CourseDetailsTabsProps) 
   const pathname = usePathname();
 
   const overviewHref = `/courses/${courseId}`;
+  const faqsHref = `/courses/${courseId}/faqs`;
   const reviewsHref = `/courses/${courseId}/reviews`;
 
-  const isOverviewActive = pathname === overviewHref;
-  const isReviewsActive = pathname === reviewsHref;
+  const getTabClassName = (isActive: boolean) =>
+    isActive
+      ? "figma-b2 inline-flex items-center justify-center rounded-[9px] bg-p1 px-6 py-2.5 text-fff"
+      : "figma-b2 inline-flex items-center justify-center rounded-[9px] bg-bg px-6 py-2.5 text-aaa";
 
   return (
     <nav className="mt-7.5 flex gap-3.75">
       <Link
         href={overviewHref}
-        className={
-          isOverviewActive
-            ? "figma-b2 rounded-[9px] bg-p1 px-6 py-4 text-fff"
-            : "figma-b2 rounded-[9px] bg-bg px-6 py-4 text-aaa"
-        }
+        className={getTabClassName(pathname === overviewHref)}
       >
         Overview
       </Link>
 
       <Link
+        href={faqsHref}
+        className={getTabClassName(pathname === faqsHref)}
+      >
+        FAQs
+      </Link>
+
+      <Link
         href={reviewsHref}
-        className={
-          isReviewsActive
-            ? "figma-b2 rounded-[9px] bg-p1 px-6 py-4 text-fff"
-            : "figma-b2 rounded-[9px] bg-bg px-6 py-4 text-aaa"
-        }
+        className={getTabClassName(pathname === reviewsHref)}
       >
         Reviews
       </Link>

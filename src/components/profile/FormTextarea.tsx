@@ -6,6 +6,8 @@ type FormTextareaProps = {
   required?: boolean;
   rows?: number;
   error?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 export default function FormTextarea({
@@ -14,6 +16,8 @@ export default function FormTextarea({
   required = false,
   rows = 5,
   error,
+  value,
+  onChange,
 }: FormTextareaProps) {
   return (
     <div className="space-y-2">
@@ -23,6 +27,8 @@ export default function FormTextarea({
         required={required}
         placeholder={placeholder}
         rows={rows}
+        value={value}
+        onChange={onChange}
         className={`w-full resize-none rounded-xl border p-4 outline-none transition ${
           error
             ? "border-red-500"

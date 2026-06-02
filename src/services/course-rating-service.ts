@@ -87,4 +87,21 @@ export const courseRatingService = {
       throw new Error("Failed to delete rating.");
     }
   },
+
+  async getSummaries(courseIds: string[]): Promise<CourseRatingSummary[]> {
+    const res = await apiFetch(`${API_URL}/course-ratings/summaries/batch`, {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+    },
+      body: JSON.stringify({ courseIds }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch rating summaries.");
+    }
+
+    return res.json();
+    },
+
 };

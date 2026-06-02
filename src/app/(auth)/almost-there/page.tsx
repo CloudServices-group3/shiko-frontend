@@ -35,7 +35,18 @@ export default function AlmostThere() {
       setLoading(true);
       setError("");
 
-      await authService.register(email, password);
+      const userId = await authService.register(email, password);
+
+      const response = await fetch(`https://shiko-profile-provider.azurewebsites.net/api/profiles/userId=${userId}`,
+        {method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create profile")
+    }
 
       // Redirect the user to dashboard.
       router.push("/verification-needed");
