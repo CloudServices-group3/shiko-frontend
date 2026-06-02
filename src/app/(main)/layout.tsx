@@ -120,7 +120,6 @@ export default function MainLayout({
           <ul className="space-y-2 mb-10">
             <SidebarItem href="/dashboard" label="Dashboard" icon={LayoutGrid} />
             <SidebarItem href="/courses" label="Courses" icon={GraduationCap} />
-            <SidebarItem href="/my-courses" label="My Courses" icon={GraduationCap} />
             <SidebarItem href="/live-chat" label="Live Chat" icon={Video} />
           </ul>
 
