@@ -35,7 +35,7 @@ export default function AlmostThere() {
       setLoading(true);
       setError("");
 
-      const userId = await authService.register(email, password);
+      await authService.register(email, password);
 
       // Redirect the user to dashboard.
       router.push("/verification-needed");
