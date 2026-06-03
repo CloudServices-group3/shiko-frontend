@@ -12,6 +12,7 @@ import SkillsSection from "@/components/profile/SkillsSection";
 import AchievementsSection from "@/components/profile/AchievementsSection";
 
 export default function Profile() {
+  // Dana - Demo userId
   const DEMO_USER_ID = "11111111-1111-1111-1111-111111111111";
 
   const [loading, setLoading] = useState(true);
@@ -126,7 +127,7 @@ export default function Profile() {
             {/* Upload profileimage */}
             <form className="space-y-8" noValidate onSubmit={handleSubmit}>
               <div className="mb-2">
-                <FormLabel htmlFor="firstName" required>
+                <FormLabel htmlFor="firstName">
                   First Name
                 </FormLabel>
               </div>
@@ -141,7 +142,7 @@ export default function Profile() {
               />
 
               <div className="mb-2">
-                <FormLabel htmlFor="lastName" required>
+                <FormLabel htmlFor="lastName">
                   Last Name
                 </FormLabel>
               </div>
