@@ -60,7 +60,12 @@ export const courseRatingService = {
       throw new Error("Failed to fetch my rating.");
     }
 
-    return res.json();
+    const rating = await res.json();
+
+    return {
+      courseId: rating.courseId,
+      ratingValue: rating.ratingValue ?? rating.value,
+    };
   },
 
   async saveMyRating(courseId: string, ratingValue: number): Promise<MyCourseRating> {

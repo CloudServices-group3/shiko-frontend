@@ -11,7 +11,7 @@ interface CourseDetail {
 async function getCourse(courseId: string): Promise<CourseDetail> {
   const res = await fetch(
     `https://coursedetails-api-dana-ggecajbzexgxhzhf.swedencentral-01.azurewebsites.net/api/CourseDetails/${courseId}`,
-    { cache: "no-store" }
+    { next: { revalidate: 300 } } 
   );
 
   return res.json();

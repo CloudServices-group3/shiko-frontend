@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import AverageRatingCard from "@/components/courses/reviews/AverageRatingCard";
 import DetailedRatingBreakdown, {
   type RatingBreakdownItem,
@@ -25,21 +26,87 @@ export default function CourseReviewsSection({
   ratingBreakdown,
   onFeedbackSaved,
 }: CourseReviewsSectionProps) {
-  async function handleSubmit(data: CourseReviewSubmitData) {
-    if (!data.rating) {
-      throw new Error("Rating is required.");
+  const [previousReviewText, setPreviousReviewText] = useState<string | null>(
+    null
+  );
+  const [previousRating, setPreviousRating] = useState<number | null>(null);
+  const [isLoadingUserFeedback, setIsLoadingUserFeedback] = useState(true);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadUserFeedback() {
+      setIsLoadingUserFeedback(true);
+
+      try {
+        const [myReview, myRating] = await Promise.all([
+          courseReviewService.getMyReview(courseId),
+          courseRatingService.getMyRating(courseId),
+        ]);
+
+        if (!isActive) {
+          return;
+        }
+
+        setPreviousReviewText(myReview?.text ?? null);
+        setPreviousRating(myRating?.ratingValue ?? null);
+      } catch {
+        if (!isActive) {
+          return;
+        }
+
+        setPreviousReviewText(null);
+        setPreviousRating(null);
+      } finally {
+        if (!isActive) {
+          return;
+        }
+
+        setIsLoadingUserFeedback(false);
+      }
     }
 
+    loadUserFeedback();
+
+    return () => {
+      isActive = false;
+    };
+  }, [courseId]);
+
+  async function handleSubmit(data: CourseReviewSubmitData) {
     await courseRatingService.saveMyRating(courseId, data.rating);
 
-    if (data.reviewText.length > 0) {
-      const existingReview = await courseReviewService.getMyReview(courseId);
+    if (!data.reviewWasEdited) {
+      await onFeedbackSaved?.();
+      return;
+    }
 
-      if (existingReview) {
-        await courseReviewService.updateMyReview(courseId, data.reviewText);
-      } else {
-        await courseReviewService.createReview(courseId, data.reviewText);
+    const hasExistingReview = previousReviewText !== null;
+
+    if (data.reviewText.length === 0) {
+      if (hasExistingReview) {
+        await courseReviewService.deleteMyReview(courseId);
+        setPreviousReviewText(null);
       }
+
+      await onFeedbackSaved?.();
+      return;
+    }
+
+    if (hasExistingReview) {
+      const updatedReview = await courseReviewService.updateMyReview(
+        courseId,
+        data.reviewText
+      );
+
+      setPreviousReviewText(updatedReview.text);
+    } else {
+      const createdReview = await courseReviewService.createReview(
+        courseId,
+        data.reviewText
+      );
+
+      setPreviousReviewText(createdReview.text);
     }
 
     await onFeedbackSaved?.();
@@ -63,7 +130,19 @@ export default function CourseReviewsSection({
       </div>
 
       <div className="mt-8">
-        <WriteReviewForm courseId={courseId} onSubmit={handleSubmit} />
+        {isLoadingUserFeedback ? (
+          <section className="w-full">
+            <h2 className="figma-title text-000">Write a Reviews</h2>
+            <p className="mt-4 figma-b3 text-aaa">Loading your feedback...</p>
+          </section>
+        ) : (
+          <WriteReviewForm
+            courseId={courseId}
+            previousReviewText={previousReviewText}
+            previousRating={previousRating}
+            onSubmit={handleSubmit}
+          />
+        )}
       </div>
     </section>
   );
