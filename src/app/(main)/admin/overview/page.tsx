@@ -1,9 +1,9 @@
-export default function AdminFaqsPage() {
+export default function AdminOverviewPage() {
   return (
     <div className="rounded-[20px] bg-bg p-6">
-      <h2 className="figma-title text-p1">FAQs</h2>
+      <h2 className="figma-title text-p1">Overview</h2>
       <p className="figma-b2 mt-3 text-aaa">
-        FAQs 
+        Overview placeholder
       </p>
     </div>
   );

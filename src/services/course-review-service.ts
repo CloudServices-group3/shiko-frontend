@@ -27,6 +27,21 @@ function getAuthHeaders() {
   };
 }
 
+async function getErrorMessage(res: Response, fallbackMessage: string) {
+  const errorBody = await res.json().catch(() => null);
+
+  if (
+    errorBody &&
+    typeof errorBody === "object" &&
+    "message" in errorBody &&
+    typeof errorBody.message === "string"
+  ) {
+    return errorBody.message;
+  }
+
+  return fallbackMessage;
+}
+
 export const courseReviewService = {
   async getCourseReviews(courseId: string): Promise<CourseReview[]> {
     const res = await apiFetch(`${API_URL}/course-reviews/${courseId}`, {
@@ -65,26 +80,48 @@ export const courseReviewService = {
       body: JSON.stringify({ text }),
     });
 
+    if (res.status === 409) {
+      throw new Error(
+        await getErrorMessage(
+          res,
+          "You need to rate the course before writing a review."
+        )
+      );
+    }
+
     if (!res.ok) {
-      throw new Error("Failed to create review.");
+      throw new Error(
+        await getErrorMessage(res, "Failed to create review.")
+      );
     }
 
     return res.json();
   },
 
-  async updateMyReview(courseId: string, text: string): Promise<CourseReview> {
-    const res = await apiFetch(`${API_URL}/course-reviews/${courseId}/me`, {
-      method: "PUT",
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ text }),
-    });
+async updateMyReview(courseId: string, text: string): Promise<CourseReview> {
+  const res = await apiFetch(`${API_URL}/course-reviews/${courseId}/me`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ text }),
+  });
 
-    if (!res.ok) {
-      throw new Error("Failed to update review.");
-    }
+  if (res.status === 409) {
+    throw new Error(
+      await getErrorMessage(
+        res,
+        "You need to rate the course before updating your review."
+      )
+    );
+  }
 
-    return res.json();
-  },
+  if (!res.ok) {
+    throw new Error(
+      await getErrorMessage(res, "Failed to update review.")
+    );
+  }
+
+  return res.json();
+},
 
   async deleteMyReview(courseId: string): Promise<void> {
     const res = await apiFetch(`${API_URL}/course-reviews/${courseId}/me`, {

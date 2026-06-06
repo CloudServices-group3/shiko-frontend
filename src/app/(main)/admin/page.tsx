@@ -1,11 +1,9 @@
-export default function AdminOverviewPage() {
+export default function ShikoAdminPage() {
   return (
     <div className="rounded-[20px] bg-bg p-6">
-      <h2 className="figma-title text-p1">Courses</h2>
+      <h2 className="figma-title text-p1">Welcome Shiko Admin</h2>
       <p className="figma-b2 mt-3 text-aaa">
-        Overview base data belongs to the Overview Provider. This section can be
-        connected later.
-      </p>
+          Administration of Shiko LMS.</p>
     </div>
   );
 }

@@ -10,8 +10,8 @@ interface CourseDetail {
 
 async function getCourse(courseId: string): Promise<CourseDetail> {
   const res = await fetch(
-    `https://shiko-course-details-api-dana-facvhgfmeqfxhmcf.swedencentral-01.azurewebsites.net/api/coursedetails/${courseId}`,
-    { cache: "force-cache" }
+    `https://coursedetails-api-dana-ggecajbzexgxhzhf.swedencentral-01.azurewebsites.net/api/CourseDetails/${courseId}`,
+    { next: { revalidate: 300 } } 
   );
 
   return res.json();

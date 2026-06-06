@@ -14,7 +14,8 @@ function isCurrentUser(value: unknown): value is CurrentUser {
   return (
     typeof user.userId === "string" &&
     typeof user.email === "string" &&
-    Array.isArray(user.roles)
+    Array.isArray(user.roles) &&
+    user.roles.every((role) => typeof role === "string")
   );
 }
 
